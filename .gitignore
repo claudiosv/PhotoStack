@@ -62,3 +62,9 @@ typings/
 
 # vsc config
 PhotoStack.code-workspace
+
+#macos tmp
+.DS_Store
+
+# Dockerfile
+Dockerfile

@@ -23,8 +23,8 @@ Semester group project for the Internet and Mobile Services course at the Free U
 * [NodeJS](https://nodejs.org/en/) - Restify for REST API, most of the actual business logic and job distribution is to be done here.
 * [Python](https://www.python.org/) - Flask for REST API, consumes jobs to do work with ML libraries
 * [RabbitMQ](https://www.rabbitmq.com/) or [Redis](https://redis.io/) - Job queue, i.e. images to process
-* [MinIO]() - Object (image) storage system
-* [MongoDB]() - Storing metadeta and references to objects
+* [MinIO](https://minio.io/) - Object (image) storage system
+* [MongoDB](https://www.mongodb.com/) - Storing metadeta and references to objects
 
 ## Features
 
