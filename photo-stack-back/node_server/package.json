@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "apollo-server-hapi": "^2.1.0",
+    "async": "^2.6.1",
+    "chai": "^4.2.0",
+    "gm": "^1.23.1",
+    "graphql": "^14.0.2",
+    "hapi": "^17.7.0",
+    "hapi-swagger": "^9.1.2",
+    "imagemin": "^6.0.0",
+    "inert": "^5.1.1",
+    "minio": "^7.0.1",
+    "mocha": "^5.2.0",
+    "moment": "^2.22.2",
+    "mongoose": "^5.3.9",
+    "nodemon": "^1.18.6",
+    "prettier": "^1.14.3",
+    "q": "^1.5.1",
+    "sharp": "^0.21.0",
+    "signale": "^1.3.0",
+    "vision": "^5.4.2",
+    "xo": "^0.23.0"
+  }
+}
