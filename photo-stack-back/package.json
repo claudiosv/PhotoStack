@@ -1,4 +1,7 @@
 {
+  "name": "photo-stack-back",
+  "version": "0.0.1",
+  "main": "index.js",
   "dependencies": {
     "amqplib": "^0.5.2",
     "apollo-server-hapi": "^2.1.0",

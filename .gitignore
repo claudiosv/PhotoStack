@@ -70,5 +70,9 @@ PhotoStack.code-workspace
 #macos tmp
 .DS_Store
 
-# Dockerfile
-Dockerfile
+# VSCode 
+# .vscode
+
+# Dockerfiles
+photo-stack-front/Dockerfile
+photo-stack-front/docker-compose.yml

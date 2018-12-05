@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    volumes:
+      - ../photo-stack-back:/photo-stack-back
+    ports:
+      - 9229:9229
+      - 3000:3000
+    command: 
+      - node
+      - "--inspect-brk=0.0.0.0"
+      - "."
