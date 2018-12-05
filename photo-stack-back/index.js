@@ -1,13 +1,25 @@
-// Load the http module to create an http server.
-var http = require('http');
+const {ApolloServer, gql} = require('apollo-server');
 
-// Configure our HTTP server to respond with Hello World to all requests.
-var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello World\n");
+// The GraphQL schema
+const typeDefs = gql`
+  type Query {
+    "A simple type for getting started!"
+    hello: String
+  }
+`;
+
+// A map of functions which return data for the schema.
+const resolvers = {
+	Query: {
+		hello: () => 'world'
+	}
+};
+
+const server = new ApolloServer({
+	typeDefs,
+	resolvers
 });
 
-server.listen(3000);
-
-// Put a friendly message on the terminal
-console.log("Server running at http://127.0.0.1:3000/");
+server.listen().then(({url}) => {
+	console.log(`🚀 Server ready at ${url}`);
+});
