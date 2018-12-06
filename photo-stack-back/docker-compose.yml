@@ -1,13 +1,61 @@
-#  temp docker-compose (dev friendly)
 version: '3'
 
 services:
-  api:
-    build: .
+
+  node:
+    build: ./node_server
+    networks:
+        - photostack-back-network
     ports:
-      - 9229:9229
-      - 8080:8080
-    command: 
-      - node
-      - "--inspect-brk=0.0.0.0"
-      - "."
+      - "4000:4000"
+
+  redis:
+    image: redis:latest
+    networks:
+      - photostack-back-network
+    volumes:
+      - ./redis_server/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
+
+  minio:
+    image: minio:latest
+    networks:
+      - photostack-back-network
+    volumes: 
+      - ./minio_server/data:/data
+      - ./minio_server/config:/root/.minio
+    ports:
+        - "9000:9000"
+
+  python:
+    build: ./python_server
+    networks:
+      - photostack-back-network
+    volumes: 
+      - ./python_server:/usr/src/python_server
+    command: python3 engine.py
+
+  mongo-db:  
+    image: mongo:latest
+    container_name: cl-mongo
+    networks:
+      - photostack-back-network
+    volumes:
+      - ./mongoDB_server/db-notes-mongo:/data/db
+      - ./mongoDB_server/mongod.conf:/etc/mongod.conf
+    command: mongod --config /etc/mongod.conf
+
+  # db-mongo-admin:
+  #   image: mongo-express
+  #   container_name: db-mongo-admin
+  #   networks:
+  #     - _network name_
+  #   environment:
+  #     ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+  #     ME_CONFIG_BASICAUTH_USERNAME: user
+  #     ME_CONFIG_BASICAUTH_PASSWORD: fairlylongpassword
+  #     ME_CONFIG_MONGODB_SERVER: some-mongo
+
+networks:
+  photostack-back-network: 
+    driver: bridge
