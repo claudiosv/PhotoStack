@@ -32,7 +32,22 @@ import {
 import "./App.sass";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { email: "", password: "" };
+  }
+  onChange = evt => {
+    const value =
+      evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+    this.setState({
+      [evt.target.name]: value
+    });
+    console.log("Changed! ", value);
+    console.log("State: ", this.state);
+  };
+
   render() {
+    const { email, password } = this.state;
     return (
       <div>
         <Navbar color="light" fixed="top">
@@ -69,8 +84,11 @@ class App extends Component {
                   <Control>
                     <Input
                       // color="danger"
+                      name="email"
                       type="email"
                       placeholder="Email input"
+                      onChange={this.onChange}
+                      value={email}
                     />
                   </Control>
                   {/* <Help color="danger">This email is invalid</Help> */}
@@ -80,8 +98,11 @@ class App extends Component {
                   <Control>
                     <Input
                       // color="danger"
+                      name="password"
                       type="password"
                       placeholder="Password input"
+                      onChange={this.onChange}
+                      value={password}
                     />
                   </Control>
                 </Field>
