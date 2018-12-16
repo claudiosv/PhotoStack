@@ -22,7 +22,8 @@
     "vision": "^5.4.2"
   },
   "scripts": {
-    "test": "xo"
+    "test": "xo",
+    "start": "nodemon index.js"
   },
   "devDependencies": {
     "apollo-server": "^2.2.6",

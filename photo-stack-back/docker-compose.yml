@@ -1,11 +1,10 @@
-version: '3'
+version: "3.7"
 
 services:
-
   node:
     build: ./node_server
     networks:
-        - photostack-back-network
+      - photostack-back-network
     ports:
       - "4000:4000"
 
@@ -18,32 +17,37 @@ services:
     command: redis-server /etc/redis/redis.conf
 
   minio:
-    image: minio:latest
+    image: minio/minio:latest
     networks:
       - photostack-back-network
-    volumes: 
+    volumes:
       - ./minio_server/data:/data
-      - ./minio_server/config:/root/.minio
+      # - ./minio_server/config:/root/.minio
     ports:
-        - "9000:9000"
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data
 
   python:
     build: ./python_server
     networks:
       - photostack-back-network
-    volumes: 
+    volumes:
       - ./python_server:/usr/src/python_server
-    command: python3 engine.py
+    # command: python3 engine.py
 
-  mongo-db:  
+  mongo-db:
     image: mongo:latest
-    container_name: cl-mongo
+    # container_name: db-mongo
     networks:
       - photostack-back-network
     volumes:
       - ./mongoDB_server/db-notes-mongo:/data/db
-      - ./mongoDB_server/mongod.conf:/etc/mongod.conf
-    command: mongod --config /etc/mongod.conf
+      - ./mongoDB_server:/etc/mongodconf
+    command: mongod
+    # --config /etc/mongodconf/mongod.conf
 
   # db-mongo-admin:
   #   image: mongo-express
@@ -57,5 +61,5 @@ services:
   #     ME_CONFIG_MONGODB_SERVER: some-mongo
 
 networks:
-  photostack-back-network: 
+  photostack-back-network:
     driver: bridge
