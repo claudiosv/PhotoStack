@@ -4,7 +4,9 @@ Semester group project for the Internet and Mobile Services course at the Free U
 
 ## Motivation
 
+
 ## Build status
+The project is currently under active development, first release is foreseen in late January 2018
 
 ## Code style
 
@@ -22,7 +24,7 @@ Semester group project for the Internet and Mobile Services course at the Free U
 * [nginx](https://nginx.org/en/) - Serves compiled react/frontend code, proxy request to Flask/Restify
 * [NodeJS](https://nodejs.org/en/) - Restify or Hapi.js for REST API, most of the actual business logic and job distribution is to be done here.
 * [Python](https://www.python.org/) - Flask for REST API, consumes jobs to do work with ML libraries
-* [RabbitMQ](https://www.rabbitmq.com/) or [Redis](https://redis.io/) - Job queue, i.e. images to process
+* [Redis](https://redis.io/) - Job queue, i.e. images to process
 * [MinIO](https://minio.io/) - Object (image) storage system
 * [MongoDB](https://www.mongodb.com/) - Storing metadeta and references to objects
 
