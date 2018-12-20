@@ -6,15 +6,17 @@ services:
     networks:
       - photostack-back-network
     ports:
-      - "4000:4000"
+      - 4000:4000
 
   redis:
-    image: redis:latest
+    image: redis:alpine
+    ports:
+      - 6379:6379
     networks:
       - photostack-back-network
-    volumes:
-      - ./redis_server/redis.conf:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
+    # volumes:
+    # - ./redis_server/redis.conf:/etc/redis/redis.conf
+    # command: redis-server /etc/redis/redis.conf
 
   minio:
     image: minio/minio:latest
@@ -24,7 +26,7 @@ services:
       - ./minio_server/data:/data
       # - ./minio_server/config:/root/.minio
     ports:
-      - "9000:9000"
+      - 9000:9000
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
@@ -39,26 +41,36 @@ services:
     # command: python3 engine.py
 
   mongo-db:
-    image: mongo:latest
+    image: mongo
     # container_name: db-mongo
     networks:
       - photostack-back-network
     volumes:
       - ./mongoDB_server/db-notes-mongo:/data/db
       - ./mongoDB_server:/etc/mongodconf
-    command: mongod
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: photostack
+    # command: mongod
     # --config /etc/mongodconf/mongod.conf
 
-  # db-mongo-admin:
-  #   image: mongo-express
-  #   container_name: db-mongo-admin
-  #   networks:
-  #     - _network name_
-  #   environment:
-  #     ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
-  #     ME_CONFIG_BASICAUTH_USERNAME: user
-  #     ME_CONFIG_BASICAUTH_PASSWORD: fairlylongpassword
-  #     ME_CONFIG_MONGODB_SERVER: some-mongo
+  db-mongo-admin:
+    image: mongo-express
+    container_name: db-mongo-admin
+    depends_on:
+      - "mongo-db"
+    ports:
+      - 8082:8081
+    networks:
+      - photostack-back-network
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_SERVER: mongo-db
 
 networks:
   photostack-back-network:
