@@ -2,79 +2,9 @@ const { ApolloServer, gql } = require("apollo-server");
 const User = require("./models/user");
 
 const mongoose = require("mongoose");
-// const typeDefs = require("./graphql/schema");
-const typeDefs = gql`
-  type User {
-    id: ID!
-    email: String!
-    firstName: String!
-    lastName: String!
-    password: String!
-  }
-
-  type Heap {
-    id: ID!
-    name: String!
-    tags: [String]!
-  }
-
-  type Metadata {
-    shootTime: Float!
-    location: [Float]!
-  }
-
-  type Photo {
-    id: ID!
-    owner: ID!
-    metadata: Metadata
-    fileName: String!
-    uploadTime: Float!
-    tags: [String]
-    objectId: String!
-    derivatives: [String]
-    postProcessing: [String]
-  }
-
-  type Query {
-    getPhotos: [Photo]
-    getUserById(id: ID!): User
-    getUserByEmail(email: String!): User
-  }
-
-  type Mutation {
-    createUser(email: String!, password: String!): User
-  }
-
-  schema {
-    query: Query
-    mutation: Mutation
-  }
-`;
-// const resolvers = require("./graphql/resolvers");
+const typeDefs = require("./graphql/schema");
+const makeResolvers = require("./graphql/resolvers");
 // const { makeExecutableSchema } = require("graphql-tools");
-const makeResolvers = models => ({
-  Query: {
-    getUserById(root, { id }) {
-      let test = models.User.findById(id).then(response => {
-        console.log(response);
-        return response;
-      });
-      return test;
-    },
-
-    getUserByEmail(root, { email }) {
-      console.log("Called");
-      return models.User.findOne({ email }).then(response => response);
-    }
-  },
-  Mutation: {
-    createUser(root, args) {
-      console.log("Called");
-      const user = new models.User(args);
-      return user.save().then(response => response);
-    }
-  }
-});
 
 const resolvers = makeResolvers({ User });
 
@@ -88,21 +18,15 @@ mongoose
     console.log(error, "Promise error");
   });
 
-// const resolvers = resolvers({ User });
-
 const server = new ApolloServer({ typeDefs, resolvers });
-// const server = new ApolloServer({
-//   typeDefs: [typeDefs],
-//   resolvers: resolvers({ User })
-// });
+
 server.listen({ port: 4001 }).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
 
 var redis = require("redis");
-var sub = redis.createClient(6379, "redis"),
-  pub = redis.createClient(6379, "redis");
-// var msg_count = 0;
+var sub = redis.createClient(6379, "redis");
+var pub = redis.createClient(6379, "redis");
 
 sub.on("subscribe", function(channel, count) {
   pub.publish("lowlight", "I am sending a message.");
