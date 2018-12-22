@@ -31,13 +31,13 @@ const schema = gql`
   }
 
   type Query {
-    getPhotos(id: ID!): [Photo]
+    getPhotos(): [Photo]
     getUserById(id: ID!): User
     getUserByEmail(email: String!): User
     loginUser(email: String!, password: String!): String
     searchPhotos(query: String!): [Photo]
-    getHighlights(userID: ID!): [Photo]
-    getHeaps(userID: ID!): [Photo]
+    getHighlights(): [Photo]
+    getHeaps(): [Photo]
     getHeap(heapID: ID!): Heap
     getPhoto(photoID: ID!): Photo
   }
