@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
-import './stylesheets/index.sass';
+import './stylesheets/index.scss';
 import 'bulma/css/bulma.css';
 import AppRouter from './App/AppRouter.jsx';
 

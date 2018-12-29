@@ -1,6 +1,8 @@
 import React from 'react';
 import {Switch, Route} from 'react-router-dom';
-import LoginContainer from '../Login';
+import SignInContainer from '../SignIn';
+import SignOutContainer from '../SignOut';
+// Import SignUpContainer from '../SignUp';
 import AppContainer from '.';
 
 export default class AppRouter extends React.Component {
@@ -8,7 +10,9 @@ export default class AppRouter extends React.Component {
 		return (
 			<Switch>
 				<Route exact path="/" component={AppContainer}/>
-				<Route exact path="/login" component={LoginContainer}/>
+				<Route path="/signin" component={SignInContainer}/>
+				{/* <Route exact path="/signup" component={SignUpContainer}/> */}
+				<Route path="/signout" component={SignOutContainer}/>
 			</Switch>
 		);
 	}

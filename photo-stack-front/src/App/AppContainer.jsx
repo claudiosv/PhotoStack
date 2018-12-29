@@ -1,26 +1,44 @@
 import React from 'react';
-import AppView from './AppView.jsx';
+import Header from '../Header';
+import App from './App.jsx';
 
 export default class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: false
+			user: {
+				id: '0',
+				firstName: 'username'
+			},
+			isBusy: false,
+			showSearchResults: false
 		};
 		this.search = this.search.bind(this);
+		this.toggleBusy = this.toggleBusy.bind(this);
 	}
 
 	componentDidMount() {
-		// Get data => if FAIL is received from the server go to Login
+		// Fetch user {id: '', firstName: ''}
+	}
+
+	toggleBusy() {
+		this.setState(state => ({
+			isBusy: !state.isBusy
+		}));
 	}
 
 	search(input) {
+		this.toggleBusy();
 		console.log(input);
 	}
 
 	render() {
+		const {user, isBusy, showSearchResults} = this.state;
 		return (
-			<AppView username="Username" isLoading={this.state.loading} onSearch={this.search}/>
+		<>
+			<Header type="search" userName={user.firstName} isBusy={isBusy} onSearch={this.search}/>
+			<App userId={user.id} showSearchResults={showSearchResults}/>
+		</>
 		);
 	}
 }
