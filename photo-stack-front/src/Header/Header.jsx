@@ -11,7 +11,7 @@ export default class Header extends React.Component {
 		this.state = {
 			input: ''
 		};
-		this.doSearch = throttle(500, this.props.onSearch);
+		this.doSearch = throttle(1000, this.props.onSearch);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
@@ -33,7 +33,7 @@ export default class Header extends React.Component {
 		const search = (
 			<Field>
 				<Control isLoading={isBusy}>
-					<Input type="text" value={input} placeholder="Search..." onChange={this.handleChange}/>
+					<Input type="text" isSize="medium" value={input} placeholder="Search..." onChange={this.handleChange}/>
 				</Control>
 			</Field>
 		);
