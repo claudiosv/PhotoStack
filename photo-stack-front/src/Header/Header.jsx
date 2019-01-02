@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Image, Navbar, NavbarBrand, NavbarItem, NavbarEnd, NavbarMenu, NavbarDropdown, NavbarLink, NavbarBurger, NavbarStart, Field, Input, Control, Title} from 'bloomer';
+import {Tag, Delete, Image, Navbar, NavbarBrand, NavbarItem, NavbarEnd, NavbarMenu, NavbarDropdown, NavbarLink, NavbarBurger, NavbarStart, Field, Input, Control, Title} from 'bloomer';
 import {throttle} from 'throttle-debounce';
 import logo from '../logo.svg';
 import '../stylesheets/header.scss';
@@ -30,10 +30,16 @@ export default class Header extends React.Component {
 		const title = (
 			<Title isSize={3}>{titleText}</Title>
 		);
+
 		const search = (
 			<Field>
-				<Control isLoading={isBusy}>
+				<Control hasIcons="left" isLoading={isBusy}> {/* Add style with padding size of tag */}
 					<Input type="text" isSize="medium" value={input} placeholder="Search..." onChange={this.handleChange}/>
+					{/* <Icon isSize="small" isAlign="left"/> */}
+					<Tag isColor="black" isSize="medium">
+						Tag
+						<Delete isSize="small"/>
+					</Tag>
 				</Control>
 			</Field>
 		);

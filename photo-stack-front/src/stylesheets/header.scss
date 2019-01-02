@@ -7,3 +7,14 @@
 .navbar-start .navbar-item .field{
 	flex-grow: 1;
 }
+
+.control .tag{
+	margin-top: calc(0.375em - 1px);
+	margin-left: calc(0.375em - 1px);
+	height: 2.25em;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 4;
+}
