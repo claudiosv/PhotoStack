@@ -11,7 +11,7 @@ export default class Header extends React.Component {
 		this.state = {
 			input: ''
 		};
-		this.doSearch = throttle(1000, this.props.onSearch);
+		this.doSearch = throttle(900, this.props.onSearch);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
