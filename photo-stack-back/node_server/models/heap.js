@@ -6,6 +6,7 @@ const heapSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
+  owner: String,
   name: String,
   tags: [String]
 });

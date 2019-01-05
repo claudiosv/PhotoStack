@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
 const User = require("./models/user");
-
+const express = require("express");
 const mongoose = require("mongoose");
 const typeDefs = require("./graphql/schema");
 const makeResolvers = require("./graphql/resolvers");
@@ -18,11 +18,24 @@ mongoose
     console.log(error, "Promise error");
   });
 
+// const server = new ApolloServer({ typeDefs, resolvers });
+
+// server.listen({ port: 4001 }).then(({ url }) => {
+//   console.log(`🚀 Server ready at ${url}`);
+// });
+
 const server = new ApolloServer({ typeDefs, resolvers });
 
-server.listen({ port: 4001 }).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+const app = express();
+server.applyMiddleware({ app });
+
+app.listen({ port: 4001 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4001${server.graphqlPath}`)
+);
+
+/*app.use('*', jwtCheck, requireAuth, checkScope);
+
+server.applyMiddleware({ app, path: '/specialUrl' }); // app is from an existing express app. Mount Apollo middleware here. If no path is specified, it defaults to `/graphql`.*/
 
 var redis = require("redis");
 var sub = redis.createClient(6379, "redis");

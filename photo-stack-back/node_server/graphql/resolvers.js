@@ -8,37 +8,57 @@ const makeResolvers = models => ({
       return test;
     },
 
-    getUserByEmail(root, { email }) {
+    getUserByEmail(root, { email: email }) {
       console.log("Called");
       return models.User.findOne({ email }).then(response => response);
     },
 
     getPhotos(root, {}) {
-      return null;
+      let userId = null;
+      return models.Photo.findById(userId).then(response => response);
     },
 
     loginUser(root, { email, password }) {
-      return null;
+      const bcrypt = require("bcrypt");
+      const saltRounds = 10;
+      let hashedPassword = bcrypt.hashSync(password, saltRounds);
+      return models.User.find({ email: email, password: hashedPassword }).then(
+        response => response
+      );
     },
 
     searchPhotos(root, { query }) {
-      return null;
+      let userId = null; //TODO
+      return models.Photo.find({ owner: userId, tags: query }).then(
+        response => response
+      );
     },
 
     getHighlights(root, { id }) {
-      return null;
+      //last 5 uploaded photos
+      let userId = null; //TODO
+      return models.Photo.find({ owner: userId }, null, {
+        skip: 0, // Starting Row
+        limit: 5, // Ending Row
+        sort: {
+          date_added: -1 //Sort by Date Added DESC
+        }
+      }).then(response => response);
     },
 
     getHeaps(root, {}) {
-      return null;
+      let userId = null; //TODO
+      return models.Heap.find({ owner: userId });
     },
 
     getHeap(root, { id }) {
-      return null;
+      let userId = null; //TODO
+      return models.Heap.find({ id: id, owner: userId });
     },
 
     getPhoto(root, { id }) {
-      return null;
+      let userId = null; //TODO
+      return models.Photo.find({ id: id, owner: userId });
     }
   },
   Mutation: {
@@ -49,13 +69,14 @@ const makeResolvers = models => ({
     },
     updateUser(root, args) {
       console.log("Called");
-      const user = new models.User(args);
-      return user.save().then(response => response);
+      return user
+        .update({ id: args.userId }, { args })
+        .then(response => response);
     },
     createHeap(root, args) {
       console.log("Called");
-      const user = new models.User(args);
-      return user.save().then(response => response);
+      const heap = new models.Heap(args);
+      return heap.save().then(response => response);
     }
   }
 });
