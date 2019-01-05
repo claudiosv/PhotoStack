@@ -1,1 +1,1 @@
-export {default} from './Mosaic.jsx';
+export {default} from './MosaicContainer.jsx';

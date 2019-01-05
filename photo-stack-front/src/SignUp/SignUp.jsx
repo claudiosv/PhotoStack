@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Title, Field, Label, Control, Input, Checkbox, Box, Button} from 'bloomer';
 
-export default class SignIn extends React.PureComponent {
+export default class SignUp extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -10,6 +10,7 @@ export default class SignIn extends React.PureComponent {
 			psw: ''
 		};
 		this.handleChange = this.handleChange.bind(this);
+		this.validation = this.validation.bind(this);
 	}
 
 	handleChange(event) {
@@ -21,7 +22,7 @@ export default class SignIn extends React.PureComponent {
 
 	render() {
 		const {email, psw} = this.state;
-		const {onSignIn} = this.props;
+		const {onSignUp} = this.props;
 		return (
 			<>
 				<Title>Sign in</Title>
@@ -44,15 +45,15 @@ export default class SignIn extends React.PureComponent {
 						</Control>
 					</Field>
 					<Field>
-						<Button isFullWidth isSize="large" isColor="info" onClick={() => onSignIn(email, psw)}>Sign in</Button>
+						<Button isFullWidth isSize="large" isColor="info" onClick={() => onSignUp(email, psw)}>Sign up</Button>
 					</Field>
 				</Box>
-				<p><a href="/signup">Sign-up</a> · <a href="/forgot_psw">Forgot Password</a></p>
+				<p><a href="/signin">Sign-in</a></p>
 			</>
 		);
 	}
 }
 
-SignIn.propTypes = {
-	onSignIn: PropTypes.func.isRequired
+SignUp.propTypes = {
+	onSignUp: PropTypes.func.isRequired
 };

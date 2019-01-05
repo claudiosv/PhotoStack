@@ -7,10 +7,10 @@ export default class Mosaic extends React.PureComponent {
 	render() {
 		const {title, photoSet} = this.props;
 		return (
-		<>
-			<Title isSize={4}>{title}</Title>
-			<Gallery photos={photoSet}/>
-		</>
+			<>
+				<Title isSize={4}>{title}</Title>
+				<Gallery photos={photoSet}/>
+			</>
 		);
 	}
 }
