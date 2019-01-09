@@ -8,7 +8,7 @@ const makeResolvers = models => ({
       return test;
     },
 
-    getUserByEmail(root, { email: email }) {
+    getUserByEmail: (root, { email: email }) => {
       console.log("Called");
       return models.User.findOne({ email }).then(response => response);
     },
@@ -77,6 +77,43 @@ const makeResolvers = models => ({
       console.log("Called");
       const heap = new models.Heap(args);
       return heap.save().then(response => response);
+    },
+    uploadPhotos(root, args) {
+      console.log("Photo upload called");
+      args.photos.forEach(element => {
+        let photo = new models.Photo(element);
+        photo.save().then(response => response);
+      });
+      return "success";
+    },
+    async singleUpload(parent, { file }) {
+      const { stream, filename, mimetype, encoding } = await file;
+
+      // 1. Validate file metadata.
+
+      // 2. Stream file contents into cloud storage:
+      // https://nodejs.org/api/stream.html
+      const uuidv4 = require("uuid/v4");
+      let name = uuidv4();
+      let metaData = {
+        "Content-Type": "text/html",
+        "Content-Language": 123,
+        "X-Amz-Meta-Testing": "fuck",
+        example: 5678
+      };
+      minioClient.putObject(
+        "photostack",
+        name,
+        stream,
+        metaData,
+        (err, etag) => {
+          return console.log(err, etag); // err should be null
+        }
+      );
+      // 3. Record the file upload in your DB.
+      // const id = await recordFile( )
+
+      return { filename, mimetype, encoding };
     }
   }
 });
