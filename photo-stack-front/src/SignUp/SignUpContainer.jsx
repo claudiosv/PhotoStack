@@ -9,10 +9,10 @@ export default class SignUpContainer extends React.Component {
 		this.state = {
 			confirmStatus: false
 		};
-		this.onSignIn = this.onSignIn.bind(this);
+		this.onSignUp = this.onSignUp.bind(this);
 	}
 
-	onSignUp(email, psw) {
+	onSignUp(values) {
 		// On success
 		this.setState({
 			confirmStatus: true
@@ -24,8 +24,10 @@ export default class SignUpContainer extends React.Component {
 		const {confirmStatus} = this.state;
 		return (
 			<Session>
-				<SignUp onSignUp={this.onSignUp}/>
-				{confirmStatus ? <Redirect to="/"/> : null}
+				<>
+					<SignUp onSignUp={this.onSignUp}/>
+					{confirmStatus ? <Redirect to="/"/> : null}
+				</>
 			</Session>
 		);
 	}

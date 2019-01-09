@@ -13,7 +13,7 @@ export default class Session extends React.PureComponent {
 				</HeroHeader>
 				<HeroBody>
 					<Container hasTextAlign="centered" hasTextColor="dark">
-						<Column isSize={4} isOffset={4}>
+						<Column isSize={5} isOffset={4}>
 							<Heading>PhotoStack</Heading>
 							{children}
 						</Column>

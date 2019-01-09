@@ -4,7 +4,6 @@ import Session from '../Session';
 import SignOut from './SignOut.jsx';
 
 export default class SignOutContainer extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -22,8 +21,10 @@ export default class SignOutContainer extends React.Component {
 		const {signOutStatus} = this.state;
 		return (
 			<Session>
-				<SignOut/>
-				{/* {signOutStatus ? <Redirect to="/"/> : null} */}
+				<>
+					<SignOut/>
+					{/* {signOutStatus ? <Redirect to="/"/> : null} */}
+				</>
 			</Session>
 		);
 	}
