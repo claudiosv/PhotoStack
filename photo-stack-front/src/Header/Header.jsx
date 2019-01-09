@@ -9,10 +9,12 @@ export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			input: ''
+			input: '',
+			mobileIsActive: false
 		};
 		this.doSearch = throttle(900, this.props.onSearch);
 		this.handleChange = this.handleChange.bind(this);
+		this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
 	}
 
 	handleChange(event) {
@@ -24,9 +26,15 @@ export default class Header extends React.Component {
 		});
 	}
 
+	toggleMobileMenu(){
+		this.setState(state => ({
+			mobileIsActive: !state.mobileIsActive
+		}));
+	}
+
 	render() {
 		const {type, titleText, isBusy, userName} = this.props;
-		const {input} = this.state;
+		const {input, mobileIsActive} = this.state;
 		const title = (
 			<Title isSize={3}>{titleText}</Title>
 		);
@@ -52,9 +60,9 @@ export default class Header extends React.Component {
 					<NavbarItem href="/">
 						<Image isSize="32x32" src={logo}/>
 					</NavbarItem>
-					<NavbarBurger/>
+					<NavbarBurger isActive={mobileIsActive} onClick={this.toggleMobileMenu}/>
 				</NavbarBrand>
-				<NavbarMenu>
+				<NavbarMenu isActive={mobileIsActive}>
 					<NavbarStart style={{justifyContent: 'center'}}>
 						<NavbarItem>
 							{{

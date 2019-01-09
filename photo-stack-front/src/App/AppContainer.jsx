@@ -8,7 +8,7 @@ export default class AppContainer extends React.Component {
 		this.state = {
 			user: {
 				id: '0',
-				firstName: 'username'
+				firstName: 'Username'
 			},
 			isBusy: false,
 			showSearchResults: false,
