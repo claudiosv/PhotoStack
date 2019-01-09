@@ -4,23 +4,26 @@ import {Container, Section, Title} from 'bloomer';
 import HighlightContainer from '../Highlight';
 import HeapContainer from '../Heap';
 import '../stylesheets/app.scss';
+import MosaicContainer from '../Mosaic';
 
 export default class App extends React.PureComponent {
 	render() {
-		const {userId, showSearchResults} = this.props;
+		const {showSearchResults, searchTerms} = this.props;
+
 		return (
 			<Section>
-				<Container>
-					<Title isSize={4}>Highlights</Title>
-					<HighlightContainer/>
+				<Container id="top" className={(showSearchResults ? 'fadeOut' : 'fadeIn')}>
+					<Container>
+						<Title isSize={4}>Highlights</Title>
+						<HighlightContainer/>
+					</Container>
+					<Container>
+						<Title isSize={4}>Heaps</Title>
+						<HeapContainer/>
+					</Container>
 				</Container>
-				<Container>
-					<Title isSize={4}>Heaps</Title>
-					<HeapContainer/>
-				</Container>
-				<Container>
-					<Title isSize={4}>All</Title>
-					<div style={{backgroundColor: 'gray'}}>All photos space</div>
+				<Container id="mosaic" className={(showSearchResults ? 'slideOut' : 'slideIn')}>
+					<MosaicContainer searchTerms={searchTerms}/>
 				</Container>
 			</Section>
 		);
@@ -28,6 +31,6 @@ export default class App extends React.PureComponent {
 }
 
 App.propTypes = {
-	userId: PropTypes.string.isRequired,
-	showSearchResults: PropTypes.bool.isRequired
+	showSearchResults: PropTypes.bool.isRequired,
+	searchTerms: PropTypes.string.isRequired
 };

@@ -20,6 +20,8 @@ export default class SignIn extends React.PureComponent {
 	}
 
 	render() {
+		const {email, psw} = this.state;
+		const {onSignIn} = this.props;
 		return (
 			<>
 				<Title>Sign in</Title>
@@ -27,13 +29,13 @@ export default class SignIn extends React.PureComponent {
 					<Field>
 						<Label>Email</Label>
 						<Control>
-							<Input isSize="large" name="email" type="email" placeholder="Your email..." value={this.state.email} onChange={this.handleChange}/>
+							<Input isSize="large" name="email" type="email" placeholder="Your email..." value={email} onChange={this.handleChange}/>
 						</Control>
 					</Field>
 					<Field>
 						<Label>Password</Label>
 						<Control>
-							<Input isSize="large" name="psw" type="password" placeholder="Your password..." value={this.state.psw} onChange={this.handleChange}/>
+							<Input isSize="large" name="psw" type="password" placeholder="Your password..." value={psw} onChange={this.handleChange}/>
 						</Control>
 					</Field>
 					<Field>
@@ -42,7 +44,7 @@ export default class SignIn extends React.PureComponent {
 						</Control>
 					</Field>
 					<Field>
-						<Button isFullWidth isSize="large" isColor="info" onClick={() => this.props.onSignIn(this.state.email, this.state.psw)}>Sign in</Button>
+						<Button isFullWidth isSize="large" isColor="info" onClick={() => onSignIn(email, psw)}>Sign in</Button>
 					</Field>
 				</Box>
 				<p><a href="/signup">Sign-up</a> · <a href="/forgot_psw">Forgot Password</a></p>

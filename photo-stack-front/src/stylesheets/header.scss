@@ -7,3 +7,6 @@
 .navbar-start .navbar-item .field{
 	flex-grow: 1;
 }
+.control.is-loading::after {
+	top: 0.95em;
+}

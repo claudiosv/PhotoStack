@@ -11,7 +11,8 @@ export default class AppContainer extends React.Component {
 				firstName: 'username'
 			},
 			isBusy: false,
-			showSearchResults: false
+			showSearchResults: false,
+			searchTerms: ''
 		};
 		this.search = this.search.bind(this);
 		this.toggleBusy = this.toggleBusy.bind(this);
@@ -28,17 +29,30 @@ export default class AppContainer extends React.Component {
 	}
 
 	search(input) {
-		this.toggleBusy();
-		console.log(input);
+		if (input === '') {
+			this.setState({
+				showSearchResults: false,
+				searchTerms: ''
+			});
+		} else {
+			this.setState({
+				showSearchResults: true,
+				searchTerms: input
+			});
+			this.toggleBusy();
+		}
 	}
 
 	render() {
-		const {user, isBusy, showSearchResults} = this.state;
+		const {user, isBusy, showSearchResults, searchTerms} = this.state;
 		return (
-		<>
-			<Header type="search" userName={user.firstName} isBusy={isBusy} onSearch={this.search}/>
-			<App userId={user.id} showSearchResults={showSearchResults}/>
-		</>
+			<>
+				<Header type="search" userName={user.firstName} isBusy={isBusy} onSearch={this.search}/>
+				<App
+					showSearchResults={showSearchResults}
+					searchTerms={searchTerms}
+				/>
+			</>
 		);
 	}
 }

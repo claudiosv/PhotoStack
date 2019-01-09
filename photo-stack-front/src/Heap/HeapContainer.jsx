@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class HeapContainer extends React.Component {
 	constructor(props) {
@@ -16,3 +17,7 @@ export default class HeapContainer extends React.Component {
 		);
 	}
 }
+
+HeapContainer.propTypes = {
+	userId: PropTypes.string.isRequired
+};

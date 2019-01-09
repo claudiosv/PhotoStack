@@ -23,8 +23,10 @@ export default class SignInContainer extends React.Component {
 		const {signInStatus} = this.state;
 		return (
 			<Session>
-				<SignIn onSignIn={this.onSignIn}/>
-				{signInStatus ? <Redirect to="/"/> : null}
+				<>
+					<SignIn onSignIn={this.onSignIn}/>
+					{signInStatus ? <Redirect to="/"/> : null}
+				</>
 			</Session>
 		);
 	}
