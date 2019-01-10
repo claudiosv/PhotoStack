@@ -42,6 +42,12 @@ const schema = gql`
     getPhoto(photoID: ID!): Photo
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
   type Mutation {
     createUser(
       email: String!
@@ -57,6 +63,7 @@ const schema = gql`
       lastName: String
     ): String
     createHeap(name: String!, tags: [String]!): String
+    uploadPhoto(file: Upload!): File!
   }
 
   schema {
