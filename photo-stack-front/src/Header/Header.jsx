@@ -1,50 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Image, Navbar, NavbarBrand, NavbarItem, NavbarEnd, NavbarMenu, NavbarDropdown, NavbarLink, NavbarBurger, NavbarStart, Field, Input, Control, Title} from 'bloomer';
-import {throttle} from 'throttle-debounce';
+import {Image, Navbar, NavbarBrand, NavbarItem, NavbarEnd, NavbarMenu, NavbarDropdown, NavbarLink, NavbarBurger, NavbarStart, Field, Control, Title} from 'bloomer';
 import logo from '../logo.svg';
+import HeaderSearch from './HeaderSearch.jsx';
 import '../stylesheets/header.scss';
 
 export default class Header extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			input: '',
 			mobileIsActive: false
 		};
-		this.doSearch = throttle(900, this.props.onSearch);
-		this.handleChange = this.handleChange.bind(this);
-		this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
 	}
 
-	handleChange(event) {
-		const val = event.target.value;
-		this.setState({
-			input: val
-		}, () => {
-			this.doSearch(val);
-		});
-	}
-
-	toggleMobileMenu(){
+	toggleMobileMenu() {
 		this.setState(state => ({
 			mobileIsActive: !state.mobileIsActive
 		}));
 	}
 
 	render() {
-		const {type, titleText, isBusy, userName} = this.props;
-		const {input, mobileIsActive} = this.state;
+		const {type, titleText, userName, onSearch} = this.props;
+		const {mobileIsActive} = this.state;
+
 		const title = (
 			<Title isSize={3}>{titleText}</Title>
 		);
+
 		const search = (
 			<Field>
-				<Control isLoading={isBusy}>
-					<Input type="text" isSize="medium" value={input} placeholder="Search..." onChange={this.handleChange}/>
+				<Control>
+					<HeaderSearch onSearch={onSearch}/>
 				</Control>
 			</Field>
 		);
+
 		const menu = (
 			<NavbarItem hasDropdown isHoverable>
 				<NavbarLink>{userName}</NavbarLink>
@@ -89,13 +79,11 @@ Header.propTypes = {
 	type: PropTypes.oneOf(['empty', 'search', 'title']).isRequired,
 	titleText: PropTypes.string,
 	onSearch: PropTypes.func,
-	isBusy: PropTypes.bool,
 	userName: PropTypes.string
 };
 
 Header.defaultProps = {
 	titleText: '',
 	onSearch: null,
-	isBusy: false,
 	userName: ''
 };
