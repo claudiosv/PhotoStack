@@ -2,12 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
 
-// https://codesandbox.io/s/l2k1l9pryl?module=/example.js
-// https://codesandbox.io/s/wqln528yvw
-// https://github.com/reactjs/react-autocomplete
-// https://github.com/moroshko/react-autosuggest#installation
-// https://react-select.com/props#creatable-props
-
 export default class HeaderSearch extends React.PureComponent {
 	constructor(props) {
 		super(props);
