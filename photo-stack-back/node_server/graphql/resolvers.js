@@ -29,9 +29,30 @@ const makeResolvers = models => ({
 
     searchPhotos(root, { query }) {
       let userId = null; //TODO
-      return models.Photo.find({ owner: userId, tags: query }).then(
-        response => response
-      );
+      // return models.Photo.find({ owner: userId, tags: query }).then(
+      //   response => response
+      // );
+      return [
+        {
+          id: "ID!",
+          owner: "ID!",
+          metadata: { shootTime: 12.3, location: [12.5, 123.3] },
+          fileName: "IMG1.jpg",
+          uploadTime: 12313124,
+          tags: ["tag1", "tag2"],
+          objectId: "ID",
+          derivatives: ["hdr1", "pannayotis"],
+          postProcessing: ["hdr", "lowlight"]
+        }
+      ];
+    },
+
+    searchPhoto(root, { query }) {
+      let userId = null; //TODO
+      // return models.Photo.find({ owner: userId, tags: query }).then(
+      //   response => response
+      // );
+      return "success " + query;
     },
 
     getHighlights(root, { id }) {
@@ -86,7 +107,7 @@ const makeResolvers = models => ({
       });
       return "success";
     },
-    async singleUpload(parent, { file }) {
+    async uploadPhoto(parent, { file }) {
       const { stream, filename, mimetype, encoding } = await file;
 
       // 1. Validate file metadata.

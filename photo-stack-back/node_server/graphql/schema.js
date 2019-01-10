@@ -1,3 +1,4 @@
+const { ApolloServer, gql } = require("apollo-server");
 const schema = gql`
   type User {
     id: ID!
@@ -31,13 +32,14 @@ const schema = gql`
   }
 
   type Query {
-    getPhotos(): [Photo]
+    getPhotos: [Photo]
     getUserById(id: ID!): User
     getUserByEmail(email: String!): User
     loginUser(email: String!, password: String!): String
     searchPhotos(query: String!): [Photo]
-    getHighlights(): [Photo]
-    getHeaps(): [Photo]
+    searchPhoto(query: String!): String
+    getHighlights: [Photo]
+    getHeaps: [Photo]
     getHeap(heapID: ID!): Heap
     getPhoto(photoID: ID!): Photo
   }
@@ -64,6 +66,7 @@ const schema = gql`
     ): String
     createHeap(name: String!, tags: [String]!): String
     uploadPhoto(file: Upload!): File!
+    uploadPhotos(file: Upload!): File!
   }
 
   schema {
