@@ -1,4 +1,5 @@
 import React from 'react';
+import FileDrop from 'react-file-drop';
 import Header from '../Header';
 import App from './App.jsx';
 
@@ -8,27 +9,20 @@ export default class AppContainer extends React.Component {
 		this.state = {
 			user: {
 				id: '0',
-				firstName: 'username'
+				firstName: 'Username'
 			},
-			isBusy: false,
 			showSearchResults: false,
 			searchTerms: ''
 		};
-		this.search = this.search.bind(this);
-		this.toggleBusy = this.toggleBusy.bind(this);
+		this.search = this.handleSearch.bind(this);
+		this.handleDrop = this.handleDrop.bind(this);
 	}
 
 	componentDidMount() {
 		// Fetch user {id: '', firstName: ''}
 	}
 
-	toggleBusy() {
-		this.setState(state => ({
-			isBusy: !state.isBusy
-		}));
-	}
-
-	search(input) {
+	handleSearch(input) {
 		if (input === '') {
 			this.setState({
 				showSearchResults: false,
@@ -39,20 +33,23 @@ export default class AppContainer extends React.Component {
 				showSearchResults: true,
 				searchTerms: input
 			});
-			this.toggleBusy();
 		}
 	}
 
+	handleDrop(files) {
+		console.log(files);
+	}
+
 	render() {
-		const {user, isBusy, showSearchResults, searchTerms} = this.state;
+		const {user, showSearchResults, searchTerms} = this.state;
 		return (
-			<>
-				<Header type="search" userName={user.firstName} isBusy={isBusy} onSearch={this.search}/>
+			<FileDrop onDrop={this.handleDrop}>
+				<Header type="search" userName={user.firstName} onSearch={this.handleSearch}/>
 				<App
 					showSearchResults={showSearchResults}
 					searchTerms={searchTerms}
 				/>
-			</>
+			</FileDrop>
 		);
 	}
 }
