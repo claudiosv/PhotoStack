@@ -11,6 +11,7 @@ export default class Header extends React.Component {
 		this.state = {
 			mobileIsActive: false
 		};
+		this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
 	}
 
 	toggleMobileMenu() {

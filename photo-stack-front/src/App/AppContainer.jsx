@@ -14,7 +14,7 @@ export default class AppContainer extends React.Component {
 			showSearchResults: false,
 			searchTerms: ''
 		};
-		this.search = this.handleSearch.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
 		this.handleDrop = this.handleDrop.bind(this);
 	}
 
@@ -23,7 +23,7 @@ export default class AppContainer extends React.Component {
 	}
 
 	handleSearch(input) {
-		if (input === '') {
+		if (input.length === 0) {
 			this.setState({
 				showSearchResults: false,
 				searchTerms: ''
@@ -31,7 +31,7 @@ export default class AppContainer extends React.Component {
 		} else {
 			this.setState({
 				showSearchResults: true,
-				searchTerms: input
+				searchTerms: input.map(e => e.label).join(' ')
 			});
 		}
 	}

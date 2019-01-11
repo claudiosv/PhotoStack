@@ -58,7 +58,7 @@ export default class HeaderSearch extends React.PureComponent {
 			);
 		}
 		return suggestions;
-	};
+	}
 
 	render() {
 		const {inputValue, value} = this.state;
