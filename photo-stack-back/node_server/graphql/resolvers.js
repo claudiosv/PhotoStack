@@ -56,35 +56,28 @@ const makeResolvers = models => ({
 
     searchPhotos(root, { query }, request) {
       request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Photo.find(
+      models.Photo.find(
         { owner: request.session.userId, tags: query },
         (err, docs) => {
           if (err) console.log(err);
           return docs;
         }
-      );
-      // return [
-      //   {
-      //     id: "ID!",
-      //     owner: "ID!",
-      //     metadata: { shootTime: 12.3, location: [12.5, 123.3] },
-      //     fileName: "IMG1.jpg",
-      //     uploadTime: 12313124,
-      //     tags: ["tag1", "tag2"],
-      //     objectId: "ID",
-      //     derivatives: ["hdr1", "pannayotis"],
-      //     postProcessing: ["hdr", "lowlight"],
-      //     height: 800,
-      //     width: 800,
-      //     mimeType: "image/jpeg",
-      //     fullsize: "id for fullsize",
-      //     thumbnail: "id for thumbnail"
-      //   }
-      // ];
+      ).then(result => result);
     },
 
     getAutocomplete(root, { query }, request) {
-      return ["Blue", "Blue Car"];
+      request.session.userId = "52ffc4a5d85242602e000000";
+      models.Photo.find(
+        { owner: request.session.userId, tags: /tag(.*)/i },
+        "tags",
+        (err, docs) => {
+          var completions = new Set();
+          if (err) console.log(err);
+          docs.forEach(doc => doc.tags.forEach(x => completions.add(x)));
+          console.log(Array.from(completions));
+          return Array.from(completions);
+        }
+      );
     },
 
     searchPhoto(root, { query }, request, schema) {
