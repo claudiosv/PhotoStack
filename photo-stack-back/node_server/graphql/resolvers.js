@@ -1,57 +1,98 @@
+const {
+  ApolloServer,
+  ApolloError,
+  UserInputError,
+  gql
+} = require("apollo-server");
+
 const makeResolvers = models => ({
   Query: {
-    getUserById(root, { id }) {
-      let test = models.User.findById(id).then(response => {
-        console.log(response);
-        return response;
-      });
-      return test;
+    getUserById(root, { id }, request, schema) {
+      return models.User.findById(id);
     },
 
-    getUserByEmail: (root, { email: email }) => {
-      console.log("Called");
-      return models.User.findOne({ email }).then(response => response);
+    getUserByEmail: (root, { email }, request, schema) => {
+      return models.User.findOne({ email });
     },
 
-    getPhotos(root, {}) {
-      let userId = null;
-      return models.Photo.findById(userId).then(response => response);
-    },
-
-    loginUser(root, { email, password }) {
-      const bcrypt = require("bcrypt");
-      const saltRounds = 10;
-      let hashedPassword = bcrypt.hashSync(password, saltRounds);
-      return models.User.find({ email: email, password: hashedPassword }).then(
-        response => response
+    getPhotosByUser(root, {}, request, schema) {
+      request.session.userId = "52ffc4a5d85242602e000000";
+      return models.Photo.find(
+        { owner: request.session.userId },
+        (err, docs) => {
+          if (err) console.log(err);
+          return docs;
+        }
       );
     },
 
-    searchPhotos(root, { query }) {
-      let userId = null; //TODO
-      // return models.Photo.find({ owner: userId, tags: query }).then(
-      //   response => response
-      // );
-      return [
-        {
-          id: "ID!",
-          owner: "ID!",
-          metadata: { shootTime: 12.3, location: [12.5, 123.3] },
-          fileName: "IMG1.jpg",
-          uploadTime: 12313124,
-          tags: ["tag1", "tag2"],
-          objectId: "ID",
-          derivatives: ["hdr1", "pannayotis"],
-          postProcessing: ["hdr", "lowlight"]
+    loginUser(root, { email, password }, request) {
+      const bcrypt = require("bcrypt");
+      const saltRounds = 10;
+      let hashedPassword = bcrypt.hashSync(password, saltRounds);
+      return models.User.find(
+        { email: email, password: hashedPassword },
+        (err, docs) => {
+          if (err) {
+            console.log(err);
+            return "fail";
+          }
+          bcrypt.compare(password, docs.password, function(err, res) {
+            if (err) {
+              console.log(err);
+              return "fail";
+            }
+            if (res === true) {
+              request.session.loggedIn = true;
+              request.session.userId = docs.id;
+              return "success";
+            } else {
+              return "fail";
+            }
+          });
         }
-      ];
+      );
     },
 
-    searchPhoto(root, { query }) {
+    searchPhotos(root, { query }, request) {
+      request.session.userId = "52ffc4a5d85242602e000000";
+      return models.Photo.find(
+        { owner: request.session.userId, tags: query },
+        (err, docs) => {
+          if (err) console.log(err);
+          return docs;
+        }
+      );
+      // return [
+      //   {
+      //     id: "ID!",
+      //     owner: "ID!",
+      //     metadata: { shootTime: 12.3, location: [12.5, 123.3] },
+      //     fileName: "IMG1.jpg",
+      //     uploadTime: 12313124,
+      //     tags: ["tag1", "tag2"],
+      //     objectId: "ID",
+      //     derivatives: ["hdr1", "pannayotis"],
+      //     postProcessing: ["hdr", "lowlight"],
+      //     height: 800,
+      //     width: 800,
+      //     mimeType: "image/jpeg",
+      //     fullsize: "id for fullsize",
+      //     thumbnail: "id for thumbnail"
+      //   }
+      // ];
+    },
+
+    getAutocomplete(root, { query }, request) {
+      return ["Blue", "Blue Car"];
+    },
+
+    searchPhoto(root, { query }, request, schema) {
       let userId = null; //TODO
       // return models.Photo.find({ owner: userId, tags: query }).then(
       //   response => response
       // );
+      console.log(request.session);
       return "success " + query;
     },
 

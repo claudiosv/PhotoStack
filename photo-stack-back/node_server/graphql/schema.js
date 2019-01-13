@@ -29,15 +29,21 @@ const schema = gql`
     objectId: String!
     derivatives: [String]
     postProcessing: [String]
+    height: Int!
+    width: Int!
+    mimeType: String!
+    thumbnail: String!
+    fullsize: String!
   }
 
   type Query {
-    getPhotos: [Photo]
+    getPhotosByUser: [Photo]
     getUserById(id: ID!): User
     getUserByEmail(email: String!): User
     loginUser(email: String!, password: String!): String
     searchPhotos(query: String!): [Photo]
     searchPhoto(query: String!): String
+    getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
     getHeaps: [Photo]
     getHeap(heapID: ID!): Heap
