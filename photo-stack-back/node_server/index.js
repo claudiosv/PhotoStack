@@ -26,7 +26,7 @@ const signale = require("signale");
 // });
 
 const minioClient = new Minio.Client({
-  endPoint: "localhost",
+  endPoint: "minio",
   port: 9000,
   useSSL: false,
   accessKey: "minio",
@@ -48,8 +48,9 @@ const server = new ApolloServer({
   resolvers,
   context: ({ req }) => req,
   formatError: error => {
-    console.log(error);
-    return new Error("Internal server error");
+    signale.fatal(error);
+    return error;
+    // return new Error("Internal server error");
     // Or, you can delete the exception information
     // delete error.extensions.exception;
     // return error;
@@ -70,7 +71,7 @@ app.get("/image/:imageId", function(req, res, next) {
     var size = 0;
     dataStream.on("data", function(chunk) {
       size += chunk.length;
-      res.write(data);
+      res.write(chunk);
     });
     dataStream.on("end", function() {
       console.log("End. Total size = " + size);
