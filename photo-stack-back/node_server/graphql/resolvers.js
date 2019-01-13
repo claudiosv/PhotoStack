@@ -69,7 +69,7 @@ const makeResolvers = models => ({
       request.session.userId = "52ffc4a5d85242602e000000";
       return models.Photo.find({
         owner: request.session.userId,
-        tags: /tag(.*)/i
+        tags: new RegExp(`${query}(.*)`, "i")
       }).then(photo => {
         var completions = new Set();
         photo.forEach(doc => doc.tags.forEach(x => completions.add(x)));
