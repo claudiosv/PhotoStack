@@ -10,6 +10,7 @@ const schema = gql`
 
   type Heap {
     id: ID!
+    owner: ID!
     name: String!
     tags: [String]!
   }
@@ -42,10 +43,9 @@ const schema = gql`
     getUserByEmail(email: String!): User
     loginUser(email: String!, password: String!): String
     searchPhotos(query: String!): [Photo]
-    searchPhoto(query: String!): String
     getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
-    getHeaps: [Photo]
+    getHeaps: [Heap]
     getHeap(heapID: ID!): Heap
     getPhoto(photoID: ID!): Photo
   }

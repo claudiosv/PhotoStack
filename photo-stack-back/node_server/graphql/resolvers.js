@@ -56,54 +56,52 @@ const makeResolvers = models => ({
 
     searchPhotos(root, { query }, request) {
       request.session.userId = "52ffc4a5d85242602e000000";
-      models.Photo.find(
+      return models.Photo.find(
         { owner: request.session.userId, tags: query },
         (err, docs) => {
           if (err) console.log(err);
           return docs;
         }
-      ).then(result => result);
+      );
     },
 
     getAutocomplete(root, { query }, request) {
       request.session.userId = "52ffc4a5d85242602e000000";
-      models.Photo.find(
-        { owner: request.session.userId, tags: /tag(.*)/i },
-        "tags",
-        (err, docs) => {
-          var completions = new Set();
-          if (err) console.log(err);
-          docs.forEach(doc => doc.tags.forEach(x => completions.add(x)));
-          console.log(Array.from(completions));
-          return Array.from(completions);
-        }
-      );
+      return models.Photo.find({
+        owner: request.session.userId,
+        tags: /tag(.*)/i
+      }).then(photo => {
+        var completions = new Set();
+        photo.forEach(doc => doc.tags.forEach(x => completions.add(x)));
+        return Array.from(completions);
+      });
     },
 
-    searchPhoto(root, { query }, request, schema) {
-      let userId = null; //TODO
-      // return models.Photo.find({ owner: userId, tags: query }).then(
-      //   response => response
-      // );
-      console.log(request.session);
-      return "success " + query;
-    },
-
-    getHighlights(root, { id }) {
+    getHighlights(root, {}, request) {
       //last 5 uploaded photos
-      let userId = null; //TODO
-      return models.Photo.find({ owner: userId }, null, {
+      request.session.userId = "52ffc4a5d85242602e000000";
+      return models.Photo.find({ owner: request.session.userId }, null, {
         skip: 0, // Starting Row
         limit: 5, // Ending Row
         sort: {
-          date_added: -1 //Sort by Date Added DESC
+          uploadTime: -1 //Sort by Date Added DESC
         }
       }).then(response => response);
     },
 
-    getHeaps(root, {}) {
-      let userId = null; //TODO
-      return models.Heap.find({ owner: userId });
+    getHeaps(root, {}, request) {
+      request.session.userId = "52ffc4a5d85242602e000000";
+      return models.Heap.find(
+        { owner: request.session.userId },
+        (err, docs) => {
+          if (err) console.log(err);
+          console.log(docs);
+          return docs;
+        }
+      ).then(response => {
+        console.log(response);
+        return response;
+      });
     },
 
     getHeap(root, { id }) {
