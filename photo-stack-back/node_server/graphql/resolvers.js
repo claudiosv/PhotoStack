@@ -165,14 +165,14 @@ const makeResolvers = models => ({
     async uploadPhoto(root, { file }, req) {
       const { stream, filename, mimetype, encoding } = await file;
       const uuidv4 = require("uuid/v4");
-      let name = uuidv4();
+      let objectId = uuidv4();
       let metaData = {
         "Content-Type": mimetype,
         Filename: filename
       };
       minioClient.putObject(
         "photostack",
-        name,
+        objectId,
         stream,
         metaData,
         (err, etag) => {
@@ -239,7 +239,7 @@ const makeResolvers = models => ({
         tags: [
           "tag2" //should be given by AI
         ],
-        objectId: name,
+        objectId: objectId,
         derivatives: {
           //"key": "value" //Should be set later when a python job is done
         },
@@ -256,6 +256,9 @@ const makeResolvers = models => ({
       const photo = new models.Photo(fileObj);
       photo.save().then(response => response);
 
+      const redis = require("redis");
+      var pub = redis.createClient(6379, "redis");
+      pub.publish("hdr", objectId);
       return { filename, mimetype, encoding };
     }
   }
