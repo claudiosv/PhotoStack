@@ -105,33 +105,55 @@ const makeResolvers = models => ({
     },
 
     getHeap(root, { id }) {
-      let userId = null; //TODO
-      return models.Heap.find({ id: id, owner: userId });
+      request.session.userId = "52ffc4a5d85242602e000000";
+      return models.Heap.findOne(
+        { id: id, owner: request.session.userId },
+        (err, docs) => {
+          if (err) console.log(err);
+          console.log(docs);
+          return docs;
+        }
+      ).then(response => {
+        console.log(response);
+        return response;
+      });
     },
 
     getPhoto(root, { id }) {
-      let userId = null; //TODO
-      return models.Photo.find({ id: id, owner: userId });
+      request.session.userId = "52ffc4a5d85242602e000000";
+      return models.Photo.findOne(
+        { id: id, owner: request.session.userId },
+        (err, docs) => {
+          if (err) console.log(err);
+          console.log(docs);
+          return docs;
+        }
+      ).then(response => {
+        console.log(response);
+        return response;
+      });
     }
   },
   Mutation: {
-    createUser(root, args) {
-      console.log("Called");
+    createUser(root, args, req) {
       const user = new models.User(args);
       return user.save().then(response => response);
     },
-    updateUser(root, args) {
-      console.log("Called");
-      return user
-        .update({ id: args.userId }, { args })
-        .then(response => response);
+    updateUser(root, args, req) {
+      req.session.userId = "5c3b59f72a066d02233b4263";
+      return models.User.findByIdAndUpdate(req.session.userId, {
+        ...args
+      }).then(response => JSON.stringify(response));
     },
-    createHeap(root, args) {
-      console.log("Called");
-      const heap = new models.Heap(args);
-      return heap.save().then(response => response);
+    createHeap(root, args, req) {
+      console.log("Args: ", args);
+      const heap = new models.Heap({
+        ...args,
+        owner: req.session.userId
+      });
+      return heap.save().then(response => JSON.stringify(response));
     },
-    uploadPhotos(root, args) {
+    uploadPhotos(root, args, req) {
       console.log("Photo upload called");
       args.photos.forEach(element => {
         let photo = new models.Photo(element);
@@ -139,20 +161,13 @@ const makeResolvers = models => ({
       });
       return "success";
     },
-    async uploadPhoto(parent, { file }) {
+    async uploadPhoto(root, { file }, req) {
       const { stream, filename, mimetype, encoding } = await file;
-
-      // 1. Validate file metadata.
-
-      // 2. Stream file contents into cloud storage:
-      // https://nodejs.org/api/stream.html
       const uuidv4 = require("uuid/v4");
       let name = uuidv4();
       let metaData = {
-        "Content-Type": "text/html",
-        "Content-Language": 123,
-        "X-Amz-Meta-Testing": "fuck",
-        example: 5678
+        "Content-Type": mimetype,
+        Filename: filename
       };
       minioClient.putObject(
         "photostack",
@@ -165,6 +180,14 @@ const makeResolvers = models => ({
       );
       // 3. Record the file upload in your DB.
       // const id = await recordFile( )
+      let fileObj = {
+        name: name,
+        filename: filename,
+        mimetype: mimetype,
+        encoding: encoding
+      };
+      const photo = new models.Photo(fileObj);
+      photo.save().then(response => response);
 
       return { filename, mimetype, encoding };
     }

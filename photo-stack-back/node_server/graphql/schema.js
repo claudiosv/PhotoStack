@@ -64,7 +64,6 @@ const schema = gql`
       lastName: String!
     ): User
     updateUser(
-      id: ID!
       email: String
       password: String
       firstName: String

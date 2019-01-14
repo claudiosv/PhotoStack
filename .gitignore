@@ -96,5 +96,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-photo-stack-back/mongoDB_server/db-notes-mongo/*
+# photo-stack-back/mongoDB_server/db-notes-mongo/*
 photo-stack-back/minio_server/data/*
