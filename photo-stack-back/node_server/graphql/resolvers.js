@@ -274,7 +274,7 @@ const makeResolvers = models => ({
       let data = {
         type: "todo",
         object_id: objectId,
-        photo_id: query
+        photo_id: photoId
       };
       pub.publish("objdetection", JSON.stringify(data));
       return { filename, mimetype, encoding };
