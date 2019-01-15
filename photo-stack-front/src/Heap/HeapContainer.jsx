@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Columns, Column} from 'bloomer';
+import plus from '../plus-solid.png';
 import Heap from './Heap.jsx';
-
-import plus from '../plus-solid.svg';
+import {Redirect} from 'react-router-dom';
 
 export default class HeapContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			heapSet: []
+			heapSet: [],
+			createOpen: false
 		};
+		this.toggleCreate = this.toggleCreate.bind(this);
 	}
 
 	componentDidMount() {
@@ -41,8 +43,16 @@ export default class HeapContainer extends React.Component {
 		);
 	}
 
+	toggleCreate() {
+		this.setState(
+			{
+				createOpen: true
+			}
+		);
+	}
+
 	render() {
-		const {heapSet} = this.state;
+		const {heapSet, createOpen} = this.state;
 		return (
 			<Columns isMultiline isGrid>
 				{
@@ -55,8 +65,11 @@ export default class HeapContainer extends React.Component {
 					})
 				}
 				<Column isSize="1/4">
-					<Heap thumbnail={plus} name="Create new..."/>
+					<div onClick={this.toggleCreate}>
+						<Heap thumbnail={plus} name="Create new..."/>
+					</div>
 				</Column>
+				{createOpen ? <Redirect to="/create"/> : null}
 			</Columns>
 		);
 	}

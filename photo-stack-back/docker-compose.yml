@@ -60,6 +60,7 @@ services:
   db-mongo-admin:
     image: mongo-express
     container_name: db-mongo-admin
+    restart: always
     depends_on:
       - "mongo-db"
     ports:

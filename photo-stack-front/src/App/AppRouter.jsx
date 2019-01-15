@@ -4,6 +4,7 @@ import SignInContainer from '../SignIn';
 import SignOutContainer from '../SignOut';
 import SignUpContainer from '../SignUp';
 import PreferencesContainer from '../Preferences';
+import HeapCreateContainer from '../Heap/HeapCreateContainer.jsx';
 import AppContainer from '.';
 
 export default class AppRouter extends React.Component {
@@ -17,6 +18,7 @@ export default class AppRouter extends React.Component {
 					<Route path="/signout" component={SignOutContainer}/>
 				</Switch>
 				<Route path="/preferences" component={PreferencesContainer}/>
+				<Route path="/create" component={HeapCreateContainer}/>
 			</>
 		);
 	}

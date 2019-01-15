@@ -5,7 +5,6 @@ import {withFormik} from 'formik';
 import * as Yup from 'yup';
 
 class Preferences extends React.PureComponent {
-
 	render() {
 		const {isOpen, onClose} = this.props;
 		const {
@@ -21,108 +20,102 @@ class Preferences extends React.PureComponent {
 				<ModalBackground onClick={onClose}/>
 				<ModalContent>
 					<Box hasTextAlign="centered">
-						<Columns>
-							<Column>
-								<Field>
-									<Label>First name</Label>
-									<Control>
-										<Input
-											isSize="large"
-											isColor={errors.firstName && touched.firstName ? 'danger' : ''}
-											name="firstName"
-											type="text"
-											placeholder="Your first name..."
-											value={values.firstName}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-										{errors.firstName && touched.firstName ? (
-											<Help isColor="danger">{errors.firstName}</Help>
-										) : null}
-									</Control>
-								</Field>
+						<Column isSize={5}>
+							<Field>
+								<Label>First name</Label>
+								<Control>
+									<Input
+										isSize="large"
+										isColor={errors.firstName && touched.firstName ? 'danger' : ''}
+										name="firstName"
+										type="text"
+										placeholder="Your first name..."
+										value={values.firstName}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+									{errors.firstName && touched.firstName ? (
+										<Help isColor="danger">{errors.firstName}</Help>
+									) : null}
+								</Control>
+							</Field>
 
-								<Field>
-									<Label>Email</Label>
-									<Control>
-										<Input
-											isSize="large"
-											isColor={errors.email && touched.email ? 'danger' : ''}
-											name="email"
-											type="email"
-											placeholder="Your email..."
-											value={values.email}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-										{errors.email && touched.email ? (
-											<Help isColor="danger">{errors.email}</Help>
-										) : null}
-									</Control>
-								</Field>
-								<Field>
-									<Label>Password</Label>
-									<Control>
-										<Input
-											isSize="large"
-											isColor={errors.password && touched.password ? 'danger' : ''}
-											name="password"
-											type="password"
-											placeholder="Don't tell anyone..."
-											value={values.password}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-										{errors.password && touched.password ? (
-											<Help isColor="danger">{errors.password}</Help>
-										) : null}
-									</Control>
-								</Field>
-							</Column>
-							<Column>
-								<Field>
-									<Label>Last name</Label>
-									<Control>
-										<Input
-											isSize="large"
-											isColor={errors.lastName && touched.lastName ? 'danger' : ''}
-											name="lastName"
-											type="text"
-											placeholder="Your last name..."
-											value={values.lastName}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-										{errors.lastName && touched.lastName ? (
-											<Help isColor="danger">{errors.lastName}</Help>
-										) : null}
-									</Control>
-								</Field>
-								<Field>
-									<Label>Password confirmation</Label>
-									<Control>
-										<Input
-											isSize="large"
-											isColor={errors.passwordConfirmation && touched.passwordConfirmation ? 'danger' : ''}
-											name="passwordConfirmation"
-											type="password"
-											placeholder="Please confirm..."
-											value={values.passwordConfirmation}
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-										{errors.passwordConfirmation && touched.passwordConfirmation ? (
-											<Help isColor="danger">{errors.passwordConfirmation}</Help>
-										) : null}
-									</Control>
-								</Field>
-							</Column>
-							<Column>
-								<Field>
-									<Button isFullWidth isSize="large" isColor="info" onClick={handleSubmit}>Sign up</Button>
-								</Field>
-							</Column>
-						</Columns>
+							<Field>
+								<Label>Email</Label>
+								<Control>
+									<Input
+										isSize="large"
+										isColor={errors.email && touched.email ? 'danger' : ''}
+										name="email"
+										type="email"
+										placeholder="Your email..."
+										value={values.email}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+									{errors.email && touched.email ? (
+										<Help isColor="danger">{errors.email}</Help>
+									) : null}
+								</Control>
+							</Field>
+							<Field>
+								<Label>Password</Label>
+								<Control>
+									<Input
+										isSize="large"
+										isColor={errors.password && touched.password ? 'danger' : ''}
+										name="password"
+										type="password"
+										placeholder="Don't tell anyone..."
+										value={values.password}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+									{errors.password && touched.password ? (
+										<Help isColor="danger">{errors.password}</Help>
+									) : null}
+								</Control>
+							</Field>
+							<Field>
+								<Label>Last name</Label>
+								<Control>
+									<Input
+										isSize="large"
+										isColor={errors.lastName && touched.lastName ? 'danger' : ''}
+										name="lastName"
+										type="text"
+										placeholder="Your last name..."
+										value={values.lastName}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+									{errors.lastName && touched.lastName ? (
+										<Help isColor="danger">{errors.lastName}</Help>
+									) : null}
+								</Control>
+							</Field>
+							<Field>
+								<Label>Password confirmation</Label>
+								<Control>
+									<Input
+										isSize="large"
+										isColor={errors.passwordConfirmation && touched.passwordConfirmation ? 'danger' : ''}
+										name="passwordConfirmation"
+										type="password"
+										placeholder="Please confirm..."
+										value={values.passwordConfirmation}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+									{errors.passwordConfirmation && touched.passwordConfirmation ? (
+										<Help isColor="danger">{errors.passwordConfirmation}</Help>
+									) : null}
+								</Control>
+							</Field>
+							<Field>
+								<Button isFullWidth isSize="large" isColor="info" onClick={handleSubmit}>Save</Button>
+							</Field>
+     </Column>
 					</Box>
 				</ModalContent>
 				<ModalClose isSize="large" onClick={onClose}/>

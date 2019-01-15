@@ -21,11 +21,11 @@ export default class Header extends React.Component {
 	}
 
 	render() {
-		const {type, titleText, userName, onSearch, onModal} = this.props;
+		const {type, titleText, userName, onSearch} = this.props;
 		const {mobileIsActive} = this.state;
 
 		const title = (
-			<Title isSize={3}>{titleText}</Title>
+			<Title isSize={4}>{titleText}</Title>
 		);
 
 		const search = (
@@ -66,7 +66,7 @@ export default class Header extends React.Component {
 					<NavbarEnd>
 						{{
 							empty: null,
-							title: null,
+							title: <NavbarItem href="/">Go Back</NavbarItem>,
 							search: menu
 						}[type]}
 					</NavbarEnd>
