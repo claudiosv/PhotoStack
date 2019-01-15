@@ -8,6 +8,7 @@
     "bulma": "^0.7.2",
     "formik": "^1.4.2",
     "graphql": "^14.0.2",
+    "graphql-tag": "^2.10.0",
     "node-sass": "^4.10.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",

@@ -34,6 +34,7 @@ def objdetection_handler(message):
     json_string = json.dumps(result)
     r = redis.Redis(host='redis', port=6379)
     r.publish('objdetection', json_string)
+
 def main():
     print("Engine started")
     r = redis.Redis(host='redis', port=6379, charset="utf-8", decode_responses=True)

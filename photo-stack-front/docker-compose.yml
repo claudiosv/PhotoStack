@@ -1,12 +1,14 @@
-version: '3'
+version: "3"
 
 services:
   photo-stack-front:
     image: photo-stack-front
     build: .
     command: nodemon -L --inspect=0.0.0.0:5858
+    # command: /bin/sh
     volumes:
       - .:/photo-stack-front
     ports:
       - "8000:8000"
       - "5858:5858"
+      - "3000:3000"
