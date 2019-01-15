@@ -27,7 +27,7 @@ const makeResolvers = models => ({
     },
 
     loginUser(root, { email, password }, request) {
-      const bcrypt = require("bcrypt");
+      const bcrypt = require("bcryptjs");
       const saltRounds = 10;
       let hashedPassword = bcrypt.hashSync(password, saltRounds);
       return models.User.find(
@@ -37,19 +37,14 @@ const makeResolvers = models => ({
             console.log(err);
             return "fail";
           }
-          bcrypt.compare(password, docs.password, function(err, res) {
-            if (err) {
-              console.log(err);
-              return "fail";
-            }
-            if (res === true) {
-              request.session.loggedIn = true;
-              request.session.userId = docs.id;
-              return "success";
-            } else {
-              return "fail";
-            }
-          });
+
+          if (bcrypt.compareSync(password, docs.password) === true) {
+            request.session.loggedIn = true;
+            request.session.userId = docs.id;
+            return "success";
+          } else {
+            return "fail";
+          }
         }
       );
     },

@@ -12,8 +12,8 @@ COPY requirements.txt ./
 
 #Install modules
 RUN pip3 install --no-cache-dir -r requirements.txt
-RUN pip3 install --no-cache-dir  https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
-
+RUN pip3 install --no-cache-dir https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
+# RUN pip3 install --ignore-installed --upgrade https://github.com/lakshayg/tensorflow-build/releases/download/tf1.12.0-macOS-mojave-ubuntu16.04-py2-py3/tensorflow-1.12.0-cp35-cp35m-linux_x86_64.whl
 
 # ENTRYPOINT [ "python3", "engine.py" ]
 # ENTRYPOINT [ "/bin/sh" ]

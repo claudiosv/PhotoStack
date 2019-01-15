@@ -7,12 +7,12 @@ import os
 import time
 
 def objdetection_handler(message):
-    print('MY HANDLER: ', message['data'])
+    print('Object detection task received: ', message['data'])
     data = json.loads(message['data'])
     print(data);
     if(data["type"] != "todo"):
         return
-#     data.objectid, photo.id
+
     execution_path = os.getcwd()
     minioClient = Minio('minio:9000',
                         access_key='minio',
@@ -30,13 +30,12 @@ def objdetection_handler(message):
     for eachPrediction, eachProbability in zip(predictions, probabilities):
         if eachProbability > 0:
            pred_list.append(eachPrediction)
-    print(pred_list)
     result = { 'type': "done", "photo_id": data['photo_id'], "object_id": data['object_id'], "objects": pred_list }
     json_string = json.dumps(result)
     r = redis.Redis(host='redis', port=6379)
     r.publish('objdetection', json_string)
 def main():
-    print("Hello World!")
+    print("Engine started")
     r = redis.Redis(host='redis', port=6379, charset="utf-8", decode_responses=True)
     p = r.pubsub()
     p.subscribe(**{'objdetection': objdetection_handler})
