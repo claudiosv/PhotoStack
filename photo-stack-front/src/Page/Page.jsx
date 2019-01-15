@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 import {Hero, HeroBody, Column, HeroHeader, Container, Heading} from 'bloomer';
 import Header from '../Header';
 
-export default class Session extends React.PureComponent {
+export default class Page extends React.PureComponent {
 	render() {
-		const {children} = this.props;
+		const {children, title} = this.props;
 		return (
 			<Hero isFullHeight>
 				<HeroHeader>
-					<Header type="empty"/>
+					<Header type="title" titleText={title}/>
 				</HeroHeader>
 				<HeroBody>
 					<Container hasTextAlign="centered" hasTextColor="dark">
 						<Column isSize={5} isOffset={4}>
-							<Heading>PhotoStack</Heading>
 							{children}
 						</Column>
 					</Container>
@@ -24,6 +23,7 @@ export default class Session extends React.PureComponent {
 	}
 }
 
-Session.propTypes = {
-	children: PropTypes.element.isRequired
+Page.propTypes = {
+	children: PropTypes.element.isRequired,
+	title: PropTypes.string.isRequired
 };

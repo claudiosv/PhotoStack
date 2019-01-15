@@ -11,6 +11,7 @@ export default class Header extends React.Component {
 		this.state = {
 			mobileIsActive: false
 		};
+		this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
 	}
 
 	toggleMobileMenu() {
@@ -24,7 +25,7 @@ export default class Header extends React.Component {
 		const {mobileIsActive} = this.state;
 
 		const title = (
-			<Title isSize={3}>{titleText}</Title>
+			<Title isSize={4}>{titleText}</Title>
 		);
 
 		const search = (
@@ -39,7 +40,7 @@ export default class Header extends React.Component {
 			<NavbarItem hasDropdown isHoverable>
 				<NavbarLink>{userName}</NavbarLink>
 				<NavbarDropdown>
-					<NavbarItem href="#">Preferences</NavbarItem>
+					<NavbarItem href="/preferences">Preferences</NavbarItem>
 					<NavbarItem href="/signout">Sign out</NavbarItem>
 				</NavbarDropdown>
 			</NavbarItem>
@@ -65,7 +66,7 @@ export default class Header extends React.Component {
 					<NavbarEnd>
 						{{
 							empty: null,
-							title: null,
+							title: <NavbarItem href="/">Go Back</NavbarItem>,
 							search: menu
 						}[type]}
 					</NavbarEnd>
@@ -79,6 +80,7 @@ Header.propTypes = {
 	type: PropTypes.oneOf(['empty', 'search', 'title']).isRequired,
 	titleText: PropTypes.string,
 	onSearch: PropTypes.func,
+	onModal: PropTypes.func.isRequired,
 	userName: PropTypes.string
 };
 

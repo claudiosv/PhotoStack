@@ -8,7 +8,7 @@ import MosaicContainer from '../Mosaic';
 
 export default class App extends React.PureComponent {
 	render() {
-		const {showSearchResults, searchTerms} = this.props;
+		const {showSearchResults, searchTerms, onSelectPhoto} = this.props;
 
 		return (
 			<Section>
@@ -23,7 +23,7 @@ export default class App extends React.PureComponent {
 					</Container>
 				</Container>
 				<Container id="mosaic" className={(showSearchResults ? 'slideOut' : 'slideIn')}>
-					<MosaicContainer searchTerms={searchTerms}/>
+					<MosaicContainer searchTerms={searchTerms} onSelectPhoto={onSelectPhoto}/>
 				</Container>
 			</Section>
 		);

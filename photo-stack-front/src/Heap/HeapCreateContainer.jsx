@@ -1,32 +1,32 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import Session from '../Session';
-import SignUp from './SignUp.jsx';
+import Page from '../Page';
+import HeapCreate from './HeapCreate.jsx';
 
-export default class SignUpContainer extends React.Component {
+export default class HeapCreateContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			confirmStatus: false
 		};
-		this.onSignUp = this.onSignUp.bind(this);
+		this.onHeapCreate = this.onHeapCreate.bind(this);
 	}
 
-	onSignUp(values) {
+	onHeapCreate(values) {
 		// On success
 		this.setState({
 			confirmStatus: true
 		});
-		// Do login
 	}
 
 	render() {
 		const {confirmStatus} = this.state;
+		const {history} = this.props;
 		return (
-			<Session>
-				<SignUp onSignUp={this.onSignUp}/>
+			<Page title="Create new Heap">
+				<HeapCreate onHeapCreate={this.onHeapCreate}/>
 				{confirmStatus ? <Redirect to="/"/> : null}
-			</Session>
+			</Page>
 		);
 	}
 }
