@@ -10,6 +10,7 @@ const makeResolvers = require("./graphql/resolvers");
 const session = require("express-session");
 const resolvers = makeResolvers({ User, Photo, Heap });
 const RedisStore = require("connect-redis")(session);
+const redis = require("redis");
 //https://www.npmjs.com/package/connect-redis
 const Minio = require("minio");
 const signale = require("signale");
@@ -100,3 +101,19 @@ server.applyMiddleware({ app });
 app.listen({ port: 4000 }, () =>
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
 );
+var sub = redis.createClient(6379, "redis");
+sub.on("subscribe", function(channel, count) {
+  // pub.publish("lowlight", "I am sending a message.");
+  // pub.publish("hdr", "I am sending a second message.");
+  // pub.publish("a nice channel", "I am sending my last message.");
+  console.log("Subscribed: ", channel, count);
+});
+
+sub.on("message", function(channel, message) {
+  switch (channel) {
+    case "objdetection":
+      console.log("Cool HDR stuff");
+      break;
+  }
+  console.log("sub channel " + channel + ": " + message);
+});

@@ -21,25 +21,6 @@ that will require a mutation if smth i changed in its form
 (mutation to user)
 */
 
-// sub.on("subscribe", function(channel, count) {
-//   pub.publish("lowlight", "I am sending a message.");
-//   pub.publish("hdr", "I am sending a second message.");
-//   pub.publish("a nice channel", "I am sending my last message.");
-//   console.log("Subscribed: ", channel, count);
-// });
-
-// sub.on("message", function(channel, message) {
-//   console.log(channel, message);
-//   switch (channel) {
-//     case "hdr":
-//       console.log("Cool HDR stuff");
-//       break;
-//   }
-//   console.log("sub channel " + channel + ": " + message);
-// });
-
-// sub.subscribe("a nice channel", "lowlight", "hdr");
-
 var minioClient = new Minio.Client({
   endPoint: "localhost",
   port: 9000,

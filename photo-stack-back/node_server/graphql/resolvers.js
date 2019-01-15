@@ -153,15 +153,6 @@ const makeResolvers = models => ({
       });
       return heap.save().then(response => JSON.stringify(response));
     },
-    uploadPhotos(root, args, req) {
-      console.log("Photo upload called");
-      // args.photos.forEach(element => {
-      //   let photo = new models.Photo(element);
-      //   photo.save().then(response => response);
-      // });
-      console.log(args);
-      return "success";
-    },
     async uploadPhoto(root, { file }, req) {
       const { stream, filename, mimetype, encoding } = await file;
       const uuidv4 = require("uuid/v4");
@@ -258,7 +249,11 @@ const makeResolvers = models => ({
 
       const redis = require("redis");
       var pub = redis.createClient(6379, "redis");
+      pub.publish("objdetection", objectId);
+      pub.publish("lowlight", objectId);
+      pub.publish("ocr", objectId);
       pub.publish("hdr", objectId);
+      pub.publish("enhance", objectId);
       return { filename, mimetype, encoding };
     }
   }
