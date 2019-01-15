@@ -10,9 +10,9 @@
   "author": "Riccardo Felluga & Claudio Spiess",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "apollo-server": "^2.3.1",
     "apollo-server-express": "^2.3.1",
-    "bcrypt": "^3.0.3",
     "connect-redis": "^3.4.0",
     "exif": "^0.6.0",
     "express-session": "^1.15.6",
