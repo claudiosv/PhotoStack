@@ -71,6 +71,7 @@ const schema = gql`
     ): String
     createHeap(name: String!, tags: [String]!): String
     uploadPhoto(file: Upload!): File!
+    test(query: String): String
   }
 
   schema {

@@ -102,6 +102,7 @@ app.listen({ port: 4000 }, () =>
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
 );
 var sub = redis.createClient(6379, "redis");
+sub.subscribe("objdetection");
 sub.on("subscribe", function(channel, count) {
   // pub.publish("lowlight", "I am sending a message.");
   // pub.publish("hdr", "I am sending a second message.");
@@ -112,7 +113,18 @@ sub.on("subscribe", function(channel, count) {
 sub.on("message", function(channel, message) {
   switch (channel) {
     case "objdetection":
-      console.log("Cool HDR stuff");
+      let data = JSON.parse(message);
+      if (data.type == "done") {
+        //insert into mongo
+        signale.debug("SUPER POWER AI", data.objects);
+        Photo.findByIdAndUpdate(data.photo_id, {
+          $addToSet: {
+            tags: {
+              $each: data.objects
+            }
+          }
+        }).then(res => signale.debug(res));
+      }
       break;
   }
   console.log("sub channel " + channel + ": " + message);

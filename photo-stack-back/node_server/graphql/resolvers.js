@@ -153,6 +153,19 @@ const makeResolvers = models => ({
       });
       return heap.save().then(response => JSON.stringify(response));
     },
+    async test(root, { query }, req) {
+      const redis = require("redis");
+      var pub = redis.createClient(6379, "redis");
+      let data = {
+        type: "todo",
+        object_id: "1397194_10152003738382375_735564635_o.jpg",
+        photo_id: query
+      };
+      pub.publish("objdetection", JSON.stringify(data));
+
+      return "success";
+    },
+
     async uploadPhoto(root, { file }, req) {
       const { stream, filename, mimetype, encoding } = await file;
       const uuidv4 = require("uuid/v4");
@@ -245,15 +258,25 @@ const makeResolvers = models => ({
         encoding: encoding
       };
       const photo = new models.Photo(fileObj);
-      photo.save().then(response => response);
+      var photoId = null;
+      photo.save().then(response => {
+        photoId = response.id;
+        console.log("Photo saved", response);
+      });
 
       const redis = require("redis");
       var pub = redis.createClient(6379, "redis");
-      pub.publish("objdetection", objectId);
-      pub.publish("lowlight", objectId);
-      pub.publish("ocr", objectId);
-      pub.publish("hdr", objectId);
-      pub.publish("enhance", objectId);
+      // pub.publish("objdetection", objectId);
+      // pub.publish("lowlight", objectId);
+      // pub.publish("ocr", objectId);
+      // pub.publish("hdr", objectId);
+      // pub.publish("enhance", objectId);
+      let data = {
+        type: "todo",
+        object_id: objectId,
+        photo_id: query
+      };
+      pub.publish("objdetection", JSON.stringify(data));
       return { filename, mimetype, encoding };
     }
   }

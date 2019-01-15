@@ -9,14 +9,17 @@ import time
 def objdetection_handler(message):
     print('MY HANDLER: ', message['data'])
     data = json.loads(message['data'])
+    print(data);
+    if(data["type"] != "todo"):
+        return
 #     data.objectid, photo.id
     execution_path = os.getcwd()
     minioClient = Minio('minio:9000',
                         access_key='minio',
                         secret_key='minio123',
                         secure=False)
-    img_path = os.path.join(execution_path, "tmp", data.object_id)
-    minioClient.fget_object('photostack', data.object_id, img_path, request_headers=None)
+    img_path = os.path.join(execution_path, "tmp", data['object_id'])
+    minioClient.fget_object('photostack', data['object_id'], img_path, request_headers=None)
     prediction = ImagePrediction()
     prediction.setModelTypeAsSqueezeNet()
     prediction.setModelPath(os.path.join(execution_path, "squeezenet_weights_tf_dim_ordering_tf_kernels.h5"))
@@ -25,20 +28,21 @@ def objdetection_handler(message):
     pred_list = list()
 
     for eachPrediction, eachProbability in zip(predictions, probabilities):
-        if eachProbability > 25:
+        if eachProbability > 0:
            pred_list.append(eachPrediction)
     print(pred_list)
-    result = { objectId: data.objectId, objects: pred_list }
+    result = { 'type': "done", "photo_id": data['photo_id'], "object_id": data['object_id'], "objects": pred_list }
     json_string = json.dumps(result)
     r = redis.Redis(host='redis', port=6379)
     r.publish('objdetection', json_string)
 
 def main():
-    print("Hello World!1")
+    print("Hello World!")
     # print("Hello World!")
-    r = redis.Redis(host='redis', port=6379)
+    r = redis.Redis(host='redis', port=6379, charset="utf-8", decode_responses=True)
     p = r.pubsub()
     p.subscribe(**{'objdetection': objdetection_handler})
     thread = p.run_in_thread(sleep_time=0.001)
 
-main()
+if __name__ == "__main__":
+    main()
