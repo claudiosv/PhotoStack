@@ -15,6 +15,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 RUN pip3 install --no-cache-dir  https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
 
 
-ENTRYPOINT [ "python3", "engine.py" ]
+# ENTRYPOINT [ "python3", "engine.py" ]
 # ENTRYPOINT [ "/bin/sh" ]
-# ENTRYPOINT watchmedo shell-command --patterns='engine.py' --command='python3 engine.py'
+ENTRYPOINT watchmedo shell-command -p "*.py" -c 'python3 engine.py'

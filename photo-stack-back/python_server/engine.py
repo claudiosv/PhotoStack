@@ -35,10 +35,8 @@ def objdetection_handler(message):
     json_string = json.dumps(result)
     r = redis.Redis(host='redis', port=6379)
     r.publish('objdetection', json_string)
-
 def main():
     print("Hello World!")
-    # print("Hello World!")
     r = redis.Redis(host='redis', port=6379, charset="utf-8", decode_responses=True)
     p = r.pubsub()
     p.subscribe(**{'objdetection': objdetection_handler})
