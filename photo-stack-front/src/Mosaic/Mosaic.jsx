@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 
 export default class Mosaic extends React.PureComponent {
 	render() {
-		const {title, photoSet} = this.props;
+		const {title, photoSet, onSelectPhoto} = this.props;
 		return (
 			<>
 				<Title isSize={4}>{title}</Title>
-				<Gallery photos={photoSet}/>
+				<Gallery photos={photoSet} onClick={onSelectPhoto}/>
 			</>
 		);
 	}

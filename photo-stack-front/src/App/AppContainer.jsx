@@ -1,6 +1,18 @@
 import React from 'react';
+import FileDrop from 'react-file-drop';
+import {Mutation} from 'react-apollo';
+import gql from 'graphql';
 import Header from '../Header';
 import App from './App.jsx';
+import PhotoContainer from '../Photo';
+
+const UPLOAD_FILE = gql`
+	mutation($files: [Upload!]!){
+		uploadPhoto(files: $files){
+
+		}
+	}
+`;
 
 export default class AppContainer extends React.Component {
 	constructor(props) {
@@ -8,28 +20,25 @@ export default class AppContainer extends React.Component {
 		this.state = {
 			user: {
 				id: '0',
-				firstName: 'username'
+				firstName: 'Username'
 			},
-			isBusy: false,
 			showSearchResults: false,
-			searchTerms: ''
+			searchTerms: '',
+			selectedPhotoIsOpen: false,
+			selectedPhotoId: ''
 		};
-		this.search = this.search.bind(this);
-		this.toggleBusy = this.toggleBusy.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
+		this.handleDrop = this.handleDrop.bind(this);
+		this.handlePhotoSelection = this.handlePhotoSelection.bind(this);
+		this.handlePhotoClose = this.handlePhotoClose.bind(this);
 	}
 
 	componentDidMount() {
 		// Fetch user {id: '', firstName: ''}
 	}
 
-	toggleBusy() {
-		this.setState(state => ({
-			isBusy: !state.isBusy
-		}));
-	}
-
-	search(input) {
-		if (input === '') {
+	handleSearch(input) {
+		if (input.length === 0) {
 			this.setState({
 				showSearchResults: false,
 				searchTerms: ''
@@ -37,22 +46,46 @@ export default class AppContainer extends React.Component {
 		} else {
 			this.setState({
 				showSearchResults: true,
-				searchTerms: input
+				searchTerms: input.map(e => e.label).join(' ')
 			});
-			this.toggleBusy();
 		}
 	}
 
+	handleDrop(files) {
+		console.log(files);
+	}
+
+	handlePhotoSelection(key) {
+		this.setState({
+			selectedPhotoIsOpen: true,
+			selectedPhotoId: key
+		});
+	}
+
+	handlePhotoClose() {
+		this.setState({
+			selectedPhotoIsOpen: false,
+			selectedPhotoId: ''
+		});
+	}
+
 	render() {
-		const {user, isBusy, showSearchResults, searchTerms} = this.state;
+		const {user, showSearchResults, searchTerms, selectedPhotoId, selectedPhotoIsOpen, preferencesOpen} = this.state;
+		const {match} = this.props;
 		return (
-			<>
-				<Header type="search" userName={user.firstName} isBusy={isBusy} onSearch={this.search}/>
-				<App
-					showSearchResults={showSearchResults}
-					searchTerms={searchTerms}
-				/>
-			</>
+			<Mutation mutation={UPLOAD_FILE}>
+				{uploadFile => (
+					<FileDrop onDrop={([file]) => uploadFile({variables: {file}})}>
+						<Header type="search" userName={user.firstName} onSearch={this.handleSearch} onPreferences={this.togglePreferences}/>
+						<App
+							showSearchResults={showSearchResults}
+							searchTerms={searchTerms}
+							onSelectPhoto={this.handlePhotoSelection}
+						/>
+						<PhotoContainer isOpen={selectedPhotoIsOpen} photoId={selectedPhotoId} onClose={this.handlePhotoClose}/>
+					</FileDrop>
+				)}
+			</Mutation>
 		);
 	}
 }

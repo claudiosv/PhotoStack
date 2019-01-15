@@ -2,30 +2,6 @@
 	margin-top: 1rem;
 }
 
-.fade-enter {
-	opacity: 1;
-	transform: translate(0%);
-	transition: all 350ms;
-}
-
-.fade-exit-active {
-	opacity: 1;
-	transform: translate(100%);
-	transition: all 350ms;
-}
-
-.fade-exit {
-	opacity: 1;
-	transform: translate(0%);
-	transition: all 350ms;
-}
-
-.fade-exit-active {
-	opacity: 0;
-	transform: translate(-100%);
-	transition: all 350ms;
-}
-
 #top {
 	opacity: 1;
 	transform: translate(0%);
@@ -43,14 +19,19 @@
 }
 
 #mosaic {
-	transform: translateY(0%);
+	position: absolute;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
 	transition: all 350ms ease-out;
 }
 
 #mosaic.slideIn {
-	transform: translateY(0%);
+	position: relative;
+	top: calc(0vh);
 }
 
 #mosaic.slideOut {
-	transform: translateY(-18%);
+	top: 2rem;
 }
