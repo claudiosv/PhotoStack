@@ -21,7 +21,7 @@ export default class Header extends React.Component {
 	}
 
 	render() {
-		const {type, titleText, userName, onSearch} = this.props;
+		const {type, titleText, userName, onSearch, onModal} = this.props;
 		const {mobileIsActive} = this.state;
 
 		const title = (
@@ -40,7 +40,7 @@ export default class Header extends React.Component {
 			<NavbarItem hasDropdown isHoverable>
 				<NavbarLink>{userName}</NavbarLink>
 				<NavbarDropdown>
-					<NavbarItem href="#">Preferences</NavbarItem>
+					<NavbarItem href="/preferences">Preferences</NavbarItem>
 					<NavbarItem href="/signout">Sign out</NavbarItem>
 				</NavbarDropdown>
 			</NavbarItem>
@@ -80,6 +80,7 @@ Header.propTypes = {
 	type: PropTypes.oneOf(['empty', 'search', 'title']).isRequired,
 	titleText: PropTypes.string,
 	onSearch: PropTypes.func,
+	onModal: PropTypes.func.isRequired,
 	userName: PropTypes.string
 };
 

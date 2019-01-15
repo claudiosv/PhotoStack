@@ -41,16 +41,16 @@ export default class HeaderSearch extends React.PureComponent {
 	getSuggestions(inputValue) {
 		// Get from server suggestions
 		const suggestions = [
-			{value: 'ocean', label: 'Ocean', color: '#00B8D9', isFixed: true},
-			{value: 'blue', label: 'Blue', color: '#0052CC', disabled: true},
-			{value: 'purple', label: 'Purple', color: '#5243AA'},
-			{value: 'red', label: 'Red', color: '#FF5630', isFixed: true},
-			{value: 'orange', label: 'Orange', color: '#FF8B00'},
-			{value: 'yellow', label: 'Yellow', color: '#FFC400'},
-			{value: 'green', label: 'Green', color: '#36B37E'},
-			{value: 'forest', label: 'Forest', color: '#00875A'},
-			{value: 'slate', label: 'Slate', color: '#253858'},
-			{value: 'silver', label: 'Silver', color: '#666666'}
+			{value: 'ocean', label: 'Ocean'},
+			{value: 'blue', label: 'Blue'},
+			{value: 'purple', label: 'Purple'},
+			{value: 'red', label: 'Red'},
+			{value: 'orange', label: 'Orange'},
+			{value: 'yellow', label: 'Yellow'},
+			{value: 'green', label: 'Green'},
+			{value: 'forest', label: 'Forest'},
+			{value: 'slate', label: 'Slate'},
+			{value: 'silver', label: 'Silver'}
 		];
 		if (inputValue) {
 			return suggestions.filter(i =>

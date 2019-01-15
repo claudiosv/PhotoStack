@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Box, Image, Tile} from 'bloomer';
 
 export default class HighlightContainer extends React.Component {
 	constructor(props) {
@@ -13,7 +14,49 @@ export default class HighlightContainer extends React.Component {
 
 	render() {
 		return (
-			<div style={{backgroundColor: 'gray'}}>HighlightContainer</div>
+			<Tile isAncestor>
+				<Tile isParent isSize={6}>
+					<Tile isChild render={
+						props => (
+							<Box>
+								<Image src="https://via.placeholder.com/1280x1280"/>
+							</Box>
+						)
+					}/>
+				</Tile>
+				<Tile isParent isVertical>
+					<Tile isChild render={
+						props => (
+							<Box>
+								<Image src="https://via.placeholder.com/480x480"/>
+							</Box>
+						)
+					}/>
+					<Tile isChild render={
+						props => (
+							<Box>
+								<Image src="https://via.placeholder.com/480x480"/>
+							</Box>
+						)
+					}/>
+				</Tile>
+				<Tile isParent isVertical>
+					<Tile isChild render={
+						props => (
+							<Box>
+								<Image src="https://via.placeholder.com/480x480"/>
+							</Box>
+						)
+					}/>
+					<Tile isChild render={
+						props => (
+							<Box>
+								<Image src="https://via.placeholder.com/480x480"/>
+							</Box>
+						)
+					}/>
+				</Tile>
+			</Tile>
 		);
 	}
 }

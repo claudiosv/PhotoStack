@@ -24,10 +24,8 @@ export default class SignUpContainer extends React.Component {
 		const {confirmStatus} = this.state;
 		return (
 			<Session>
-				<>
-					<SignUp onSignUp={this.onSignUp}/>
-					{confirmStatus ? <Redirect to="/"/> : null}
-				</>
+				<SignUp onSignUp={this.onSignUp}/>
+				{confirmStatus ? <Redirect to="/"/> : null}
 			</Session>
 		);
 	}

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Route} from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import {ApolloProvider} from 'react-apollo';
 import * as serviceWorker from './serviceWorker';
@@ -10,13 +10,13 @@ import 'bulma/css/bulma.css';
 import AppRouter from './App/AppRouter.jsx';
 
 const client = new ApolloClient({
-	uri: 'localhost'
+	uri: 'http://localhost:4000'
 });
 
 ReactDOM.render(
 	<ApolloProvider client={client}>
 		<BrowserRouter>
-			<AppRouter/>
+			<Route component={AppRouter}/>
 		</BrowserRouter>
 	</ApolloProvider>,
 	document.getElementById('root'));
