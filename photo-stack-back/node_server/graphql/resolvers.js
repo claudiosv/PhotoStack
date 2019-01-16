@@ -28,25 +28,27 @@ const makeResolvers = models => ({
 
     loginUser(root, { email, password }, request) {
       const bcrypt = require("bcryptjs");
-      const saltRounds = 10;
-      let hashedPassword = bcrypt.hashSync(password, saltRounds);
-      return models.User.find(
-        { email: email, password: hashedPassword },
-        (err, docs) => {
-          if (err) {
-            console.log(err);
-            return "fail";
-          }
-
-          if (bcrypt.compareSync(password, docs.password) === true) {
-            request.session.loggedIn = true;
-            request.session.userId = docs.id;
-            return "success";
-          } else {
-            return "fail";
-          }
+      return models.User.findOne({ email: email }, (err, docs) => {
+        if (err || !docs) {
+          console.log(err);
+          return "fail";
         }
-      );
+      }).then(docs => {
+        if (bcrypt.compareSync(password, docs.password)) {
+          request.session.loggedIn = true;
+          request.session.userId = docs.id;
+          return "success";
+        } else {
+          return "fail";
+        }
+      });
+    },
+
+    bcrypt(root, { pass }, req) {
+      const bcrypt = require("bcryptjs");
+      const saltRounds = 10;
+      let hashedPassword = bcrypt.hashSync(pass, saltRounds);
+      return hashedPassword;
     },
 
     searchPhotos(root, { query }, request) {
