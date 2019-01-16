@@ -1,6 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
+import ApolloClient from 'apollo-boost';
+import gql from 'graphql-tag';
+
+const GET_AUTOCOMPLETE = gql`
+query ($query: String!){
+	getAutocomplete(query: $query)
+}
+`;
+
+const client = new ApolloClient({
+	uri: 'http://localhost:4000/graphql'
+});
 
 export default class HeaderSearch extends React.PureComponent {
 	constructor(props) {
@@ -38,20 +50,15 @@ export default class HeaderSearch extends React.PureComponent {
 		}
 	}
 
-	getSuggestions(inputValue) {
-		// Get from server suggestions
-		const suggestions = [
-			{value: 'ocean', label: 'Ocean'},
-			{value: 'blue', label: 'Blue'},
-			{value: 'purple', label: 'Purple'},
-			{value: 'red', label: 'Red'},
-			{value: 'orange', label: 'Orange'},
-			{value: 'yellow', label: 'Yellow'},
-			{value: 'green', label: 'Green'},
-			{value: 'forest', label: 'Forest'},
-			{value: 'slate', label: 'Slate'},
-			{value: 'silver', label: 'Silver'}
-		];
+	async getSuggestions(inputValue) {
+		console.log(inputValue);
+		const {data} = await client.query({
+			query: GET_AUTOCOMPLETE,
+			variables: {query: inputValue}
+		});
+		const suggestions = data.getAutocomplete.map(s => {
+			return {value: s, label: s};
+		});
 		if (inputValue) {
 			return suggestions.filter(i =>
 				i.label.toLowerCase().includes(inputValue.toLowerCase())
