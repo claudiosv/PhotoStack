@@ -30,7 +30,7 @@ MosaicContainer.propTypes = {
 
 const userPhotos = [
 	{
-		src: 'https://source.unsplash.com/2ShvY8Lf6l0/800x599',
+		src: 'https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=599',
 		width: 4,
 		height: 3,
 		key: 'minioID'
@@ -41,12 +41,12 @@ const userPhotos = [
 		height: 1
 	},
 	{
-		src: 'https://source.unsplash.com/qDkso9nvCg0/600x799',
+		src: 'https://images.unsplash.com/photo-1524293568345-75d62c3664f7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&h=800',
 		width: 3,
 		height: 4
 	},
 	{
-		src: 'https://source.unsplash.com/iecJiKe_RNg/600x799',
+		src: 'https://images.unsplash.com/photo-1515688403147-44e0433f180f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&h=799',
 		width: 3,
 		height: 4
 	},
@@ -56,7 +56,7 @@ const userPhotos = [
 		height: 4
 	},
 	{
-		src: 'https://source.unsplash.com/NQSWvyVRIJk/800x599',
+		src: 'https://images.unsplash.com/photo-1513862448120-a41616062133?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=600',
 		width: 4,
 		height: 3
 	},

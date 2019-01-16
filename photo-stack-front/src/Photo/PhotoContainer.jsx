@@ -10,17 +10,8 @@ export default class PhotoContainer extends React.Component {
 		this.state = {
 			photoList:  [
 				{
-					original: 'https://source.unsplash.com/2ShvY8Lf6l0/800x599',
-					thumbnail: 'https://source.unsplash.com/2ShvY8Lf6l0/80x59'
-				},
-				{
-					original: 'https://source.unsplash.com/Dm-qxdynoEc/800x799'
-				},
-				{
-					original: 'https://source.unsplash.com/qDkso9nvCg0/600x799'
-				},
-				{
-					original: 'https://source.unsplash.com/iecJiKe_RNg/600x799'
+					original: 'https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=599',
+					thumbnail: 'https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=80&h=59'
 				}
 			]
 		};

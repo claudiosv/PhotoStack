@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, ModalBackground, ModalContent, ModalClose, Box, Columns, Column, Field, Label, Control, Help, Input, Button} from 'bloomer';
+import {Modal, ModalBackground, ModalContent, ModalClose, Box, Columns, Column, Field, Label, Control, Help, Input, Button, Content} from 'bloomer';
 import PropTypes from 'prop-types';
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
@@ -20,7 +20,8 @@ class Preferences extends React.PureComponent {
 				<ModalBackground onClick={onClose}/>
 				<ModalContent>
 					<Box hasTextAlign="centered">
-						<Column isSize={5}>
+					<Content>
+						<Column isOffset={2} isSize={8}>
 							<Field>
 								<Label>First name</Label>
 								<Control>
@@ -39,7 +40,24 @@ class Preferences extends React.PureComponent {
 									) : null}
 								</Control>
 							</Field>
-
+							<Field>
+								<Label>Last name</Label>
+								<Control>
+									<Input
+										isSize="large"
+										isColor={errors.lastName && touched.lastName ? 'danger' : ''}
+										name="lastName"
+										type="text"
+										placeholder="Your last name..."
+										value={values.lastName}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+									{errors.lastName && touched.lastName ? (
+										<Help isColor="danger">{errors.lastName}</Help>
+									) : null}
+								</Control>
+							</Field>
 							<Field>
 								<Label>Email</Label>
 								<Control>
@@ -66,7 +84,7 @@ class Preferences extends React.PureComponent {
 										isColor={errors.password && touched.password ? 'danger' : ''}
 										name="password"
 										type="password"
-										placeholder="Don't tell anyone..."
+										placeholder="Type a new one to chenge it"
 										value={values.password}
 										onChange={handleChange}
 										onBlur={handleBlur}
@@ -76,24 +94,7 @@ class Preferences extends React.PureComponent {
 									) : null}
 								</Control>
 							</Field>
-							<Field>
-								<Label>Last name</Label>
-								<Control>
-									<Input
-										isSize="large"
-										isColor={errors.lastName && touched.lastName ? 'danger' : ''}
-										name="lastName"
-										type="text"
-										placeholder="Your last name..."
-										value={values.lastName}
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-									{errors.lastName && touched.lastName ? (
-										<Help isColor="danger">{errors.lastName}</Help>
-									) : null}
-								</Control>
-							</Field>
+							
 							<Field>
 								<Label>Password confirmation</Label>
 								<Control>
@@ -116,6 +117,7 @@ class Preferences extends React.PureComponent {
 								<Button isFullWidth isSize="large" isColor="info" onClick={handleSubmit}>Save</Button>
 							</Field>
      </Column>
+	 </Content>
 					</Box>
 				</ModalContent>
 				<ModalClose isSize="large" onClick={onClose}/>
