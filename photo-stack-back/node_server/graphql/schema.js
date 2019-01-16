@@ -46,6 +46,7 @@ const schema = gql`
     getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
     getHeaps: [Heap]
+    bcrypt(pass: String): String
     getHeap(heapID: ID!): Heap
     getPhoto(photoID: ID!): Photo
   }
