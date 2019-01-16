@@ -7,9 +7,11 @@ import PhotoContainer from '../Photo';
 import App from './App.jsx';
 
 const UPLOAD_FILE = gql`
-  mutation uploadPhoto($file: Upload!) {
+mutation($file: Upload!) {
     uploadPhoto(file: $file) {
-      filename
+		filename
+		mimetype
+		encoding
     }
   }
 `;
@@ -91,7 +93,9 @@ export default class AppContainer extends React.Component {
 		return (
 			<Mutation mutation={UPLOAD_FILE}>
 				{uploadFile => (
-					<FileDrop onDrop={([file]) => uploadFile({variables: {file}})}>
+					<FileDrop onDrop={(fileList) => {
+						console.log(fileList[0]);
+						uploadFile({variables: {file: fileList[0]}})}}>
 						<Query query={GET_USER} variables={{id}}>
 							{({loading, error, data}) => {
 								if (loading) {
@@ -107,6 +111,7 @@ export default class AppContainer extends React.Component {
 								);
 							}}
 						</Query>
+						
 						<App
 							showSearchResults={showSearchResults}
 							searchTerms={searchTerms}

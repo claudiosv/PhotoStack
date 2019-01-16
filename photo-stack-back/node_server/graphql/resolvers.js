@@ -4,6 +4,16 @@ const {
   UserInputError,
   gql
 } = require("apollo-server");
+const Minio = require("minio");
+
+
+const minioClient = new Minio.Client({
+  endPoint: "minio",
+  port: 9000,
+  useSSL: false,
+  accessKey: "minio",
+  secretKey: "minio123"
+});
 
 const makeResolvers = models => ({
   Query: {
@@ -164,6 +174,7 @@ const makeResolvers = models => ({
     },
 
     async uploadPhoto(root, { file }, req) {
+      console.log(JSON.stringify(file));
       const { stream, filename, mimetype, encoding } = await file;
       const uuidv4 = require("uuid/v4");
       let objectId = uuidv4();
