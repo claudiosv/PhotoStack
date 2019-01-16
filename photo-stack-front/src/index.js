@@ -10,7 +10,7 @@ import 'bulma/css/bulma.css';
 import AppRouter from './App/AppRouter.jsx';
 
 const client = new ApolloClient({
-	uri: 'http://localhost:4000'
+	uri: 'http://localhost:4000/graphql'
 });
 
 ReactDOM.render(

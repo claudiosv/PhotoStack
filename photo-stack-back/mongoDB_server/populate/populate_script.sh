@@ -1,0 +1,3 @@
+mongoimport --username root --password example --db photostack --collection users --file /populate/users\(1\).json --authenticationDatabase admin
+mongoimport --username root --password example --db photostack --collection heaps --file /populate/heaps\(1\).json --authenticationDatabase admin
+mongoimport --username root --password example --db photostack --collection photos --file /populate/photos\(1\).json --authenticationDatabase admin

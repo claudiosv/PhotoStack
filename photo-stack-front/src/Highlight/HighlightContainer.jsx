@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Box, Image, Tile} from 'bloomer';
 
+import {Query} from 'react-apollo';
+import gql from 'graphql-tag';
+
 export default class HighlightContainer extends React.Component {
 	constructor(props) {
 		super(props);
@@ -16,10 +19,10 @@ export default class HighlightContainer extends React.Component {
 		return (
 			<Tile isAncestor>
 				<Tile isParent isSize={6}>
-					<Tile isChild render={
+					<Tile isChild url="https://images.unsplash.com/photo-1524293568345-75d62c3664f7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&h=1000" render={
 						props => (
 							<Box>
-								<Image src="https://images.unsplash.com/photo-1524293568345-75d62c3664f7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&h=1000"/>
+								<Image src={props.url}/>
 							</Box>
 						)
 					}/>

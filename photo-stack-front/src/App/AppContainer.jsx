@@ -16,9 +16,9 @@ const UPLOAD_FILE = gql`
 
 const GET_USER = gql`
   query getUserById($id: ID!){
-	  User(id: $id){
-		  firstName
-	  }
+	getUserById(id: $id){
+		firstName
+	}
   }
 `;
 
@@ -27,7 +27,7 @@ export default class AppContainer extends React.Component {
 		super(props);
 		this.state = {
 			user: {
-				id: '0',
+				id: '5c3b59f72a066d02233b4263',
 				firstName: 'Username'
 			},
 			showSearchResults: false,
@@ -92,14 +92,21 @@ export default class AppContainer extends React.Component {
 			<Mutation mutation={UPLOAD_FILE}>
 				{uploadFile => (
 					<FileDrop onDrop={([file]) => uploadFile({variables: {file}})}>
-
-						<Header
-							type="search"
-							userName={user.firstName}
-							onSearch={this.handleSearch}
-							onPreferences={this.togglePreferences}
-						/>
-
+						<Query query={GET_USER} variables={{id}}>
+							{({loading, error, data}) => {
+								if (loading) {
+									return 'Loading...';
+								}
+								return (
+									<Header
+										type="search"
+										userName={data.getUserById.firstName}
+										onSearch={this.handleSearch}
+										onPreferences={this.togglePreferences}
+									/>
+								);
+							}}
+						</Query>
 						<App
 							showSearchResults={showSearchResults}
 							searchTerms={searchTerms}

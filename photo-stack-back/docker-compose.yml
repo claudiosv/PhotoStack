@@ -9,6 +9,9 @@ services:
       - photostack-back-network
     ports:
       - 4000:4000
+    depends_on:
+      - "mongo-db"
+    restart: always
 
   redis:
     image: redis:alpine
@@ -52,6 +55,7 @@ services:
     volumes:
       - ./mongoDB_server/db-notes-mongo:/data/db
       - ./mongoDB_server:/etc/mongodconf
+      - ./mongoDB_server/populate:/populate
     ports:
       - 27017:27017
     environment:

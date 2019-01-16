@@ -1,0 +1,19 @@
+{
+	"_id": {
+		"$oid": "5c195cb83548db0006e1ebaf"
+	},
+	"email": "claudiovspiess@gmail.com",
+	"firstName": "Claudio",
+	"lastName": "Spiess",
+	"password": "bcrypt"
+}
+{
+	"_id": {
+		"$oid": "5c3b59f72a066d02233b4263"
+	},
+	"email": "claudiovspie@gmail.com",
+	"password": "bcryp",
+	"firstName": "Claudio1",
+	"lastName": "Spie1",
+	"__v": 0
+}

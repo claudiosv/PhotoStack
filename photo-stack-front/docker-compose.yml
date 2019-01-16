@@ -7,7 +7,8 @@ services:
     command: nodemon -L --inspect=0.0.0.0:5858
     # command: /bin/sh
     volumes:
-      - .:/photo-stack-front
+      - ./src:/photo-stack-front/src
+      - ./public:/photo-stack-front/public
     ports:
       - "8000:8000"
       - "5858:5858"

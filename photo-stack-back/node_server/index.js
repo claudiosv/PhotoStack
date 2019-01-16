@@ -42,6 +42,7 @@ mongoose
   )
   .catch(error => {
     console.log(error, "Promise error");
+    // process.exit(1);
   });
 
 const server = new ApolloServer({
