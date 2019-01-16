@@ -29,7 +29,7 @@ export default class AppContainer extends React.Component {
 		super(props);
 		this.state = {
 			user: {
-				id: '5c3b59f72a066d02233b4263',
+				id: '5c195cb83548db0006e1ebaf',
 				firstName: 'Username'
 			},
 			showSearchResults: false,
