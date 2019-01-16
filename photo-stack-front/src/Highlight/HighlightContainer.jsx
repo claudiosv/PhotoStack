@@ -19,7 +19,7 @@ export default class HighlightContainer extends React.Component {
 					<Tile isChild render={
 						props => (
 							<Box>
-								<Image src="https://via.placeholder.com/1280x1280"/>
+								<Image src="https://images.unsplash.com/photo-1524293568345-75d62c3664f7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&h=1000"/>
 							</Box>
 						)
 					}/>
@@ -28,14 +28,14 @@ export default class HighlightContainer extends React.Component {
 					<Tile isChild render={
 						props => (
 							<Box>
-								<Image src="https://via.placeholder.com/480x480"/>
+								<Image isRatio="square" src="https://images.unsplash.com/photo-1515688403147-44e0433f180f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=480&h=480"/>
 							</Box>
 						)
 					}/>
 					<Tile isChild render={
 						props => (
 							<Box>
-								<Image src="https://via.placeholder.com/480x480"/>
+								<Image isRatio="square" src="https://source.unsplash.com/Dm-qxdynoEc/800x799"/>
 							</Box>
 						)
 					}/>
@@ -44,14 +44,14 @@ export default class HighlightContainer extends React.Component {
 					<Tile isChild render={
 						props => (
 							<Box>
-								<Image src="https://via.placeholder.com/480x480"/>
+								<Image isRatio="square" src="https://images.unsplash.com/photo-1495001258031-d1b407bc1776?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=480&h=480"/>
 							</Box>
 						)
 					}/>
 					<Tile isChild render={
 						props => (
 							<Box>
-								<Image src="https://via.placeholder.com/480x480"/>
+								<Image isRatio="square" src="https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=480&h=480"/>
 							</Box>
 						)
 					}/>

@@ -27,6 +27,7 @@ export default class PreferencesContainer extends React.Component {
 
 	render() {
 		const {isOpen} = this.state;
+		console.log(this.props.location);
 		return (
 			<Preferences isOpen={isOpen} onClose={this.handleClose}/>
 		);
