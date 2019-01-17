@@ -14,6 +14,7 @@ const redis = require("redis");
 //https://www.npmjs.com/package/connect-redis
 const Minio = require("minio");
 const signale = require("signale");
+const multer = require("multer");
 
 // signale.success("Operation successful");
 // signale.debug("Hello", "from", "L59");
@@ -35,20 +36,32 @@ const minioClient = new Minio.Client({
 });
 
 mongoose.set("useFindAndModify", false);
-mongoose
-  .connect(
-    "mongodb://photostack_user:12345678@mongo-db:27017/photostack",
-    { useNewUrlParser: true }
-  )
-  .catch(error => {
-    console.log(error, "Promise error");
-    // process.exit(1);
-  });
+function connect() {
+  mongoose
+    .connect(
+      "mongodb://photostack_user:12345678@mongo-db:27017/photostack",
+      { useNewUrlParser: true }
+    )
+    .catch(error => {
+      console.log(error, "Promise error");
+      connect();
+      // process.exit(1);
+    });
+}
+connect();
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => req,
+  uploads: {
+    // Limits here should be stricter than config for surrounding
+    // infrastructure such as Nginx so errors can be handled elegantly by
+    // graphql-upload:
+    // https://github.com/jaydenseric/graphql-upload#type-uploadoptions
+    maxFileSize: 10000000, // 10 MB
+    maxFiles: 20
+  },
   formatError: error => {
     signale.fatal(error);
     return error;
@@ -60,6 +73,18 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.use(
+  session({
+    store: new RedisStore({
+      host: "redis",
+      port: 6379
+    }),
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  })
+);
 app.get("/image/:imageId", function(req, res, next) {
   res.set("Content-Type", "image/jpeg");
 
@@ -68,7 +93,7 @@ app.get("/image/:imageId", function(req, res, next) {
     dataStream
   ) {
     if (err) {
-      return console.log(err);
+      return console.log("Err", err);
     }
     var size = 0;
     dataStream.on("data", function(chunk) {
@@ -85,18 +110,92 @@ app.get("/image/:imageId", function(req, res, next) {
   });
 });
 
-app.use(
-  session({
-    store: new RedisStore({
-      host: "redis",
-      port: 6379
-    }),
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  })
-);
+const imageFilter = function(req, file, callback) {
+  // accept image only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    return callback(new Error("Only image files are allowed!"), false);
+  }
+  callback(null, true);
+};
+var storage = multer.memoryStorage();
+const upload = multer({
+  // dest: `imgtmp/`,
+  fileFilter: imageFilter,
+  storage: storage
+});
+
+app.post("/upload/", upload.array("photos", 12), async (req, res) => {
+  req.session.userId = "52ffc4a5d85242602e000000";
+  try {
+    const redis = require("redis");
+    const pub = redis.createClient(6379, "redis");
+    const uuidv4 = require("uuid/v4");
+    const ExifImage = require("exif").ExifImage;
+    const moment = require("moment");
+    req.files.forEach(file => {
+      const { buffer, originalname, mimetype, encoding, size } = file;
+
+      let objectId = uuidv4();
+      let metaData = {
+        "Content-Type": mimetype,
+        Filename: originalname
+      };
+      minioClient.putObject(
+        "photostack",
+        objectId,
+        buffer,
+        metaData,
+        (err, etag) => {
+          return err
+            ? console.log("Error", err, etag)
+            : console.log("File uploaded with etag", etag); // err should be null
+        }
+      );
+      new ExifImage(buffer, function(error, exifData) {
+        if (error) console.log("Exif Error: " + error.message);
+        let fileObj = {
+          owner: req.session.userId,
+          metadata: {
+            ...exifData.exif
+          },
+          uploadTime: moment().unix(),
+          objectId: objectId,
+          height: exifData.exif.ExifImageHeight,
+          width: exifData.exif.ExifImageWidth,
+          // thumbnail: thumbnailName,
+          fileName: originalname,
+          mimeType: mimetype,
+          encoding: encoding
+        };
+        const photo = new Photo(fileObj);
+        photo
+          .save()
+          .then(response => {
+            let data = {
+              type: "todo",
+              object_id: objectId,
+              photo_id: response.id
+            };
+            pub.publish("objdetection", JSON.stringify(data));
+            console.log("Photo saved", response);
+          })
+          .catch(x => signale.error("Tiakane", x));
+      });
+      // pub.publish("objdetection", objectId);
+      // pub.publish("lowlight", objectId);
+      // pub.publish("ocr", objectId);
+      // pub.publish("hdr", objectId);
+      // pub.publish("enhance", objectId);
+
+      // signale.debug(fileObj, x.originalname);
+    });
+    res.send("success");
+  } catch (err) {
+    signale.error(err);
+    res.sendStatus(400);
+  }
+});
+
 server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () =>

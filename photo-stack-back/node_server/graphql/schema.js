@@ -52,6 +52,7 @@ const schema = gql`
   }
 
   type File {
+    path: String!
     filename: String!
     mimetype: String!
     encoding: String!

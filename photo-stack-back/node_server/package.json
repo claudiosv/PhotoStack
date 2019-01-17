@@ -10,9 +10,9 @@
   "author": "Riccardo Felluga & Claudio Spiess",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
     "apollo-server": "^2.3.1",
     "apollo-server-express": "^2.3.1",
+    "bcryptjs": "^2.4.3",
     "connect-redis": "^3.4.0",
     "exif": "^0.6.0",
     "express-session": "^1.15.6",
@@ -23,8 +23,14 @@
     "minio": "^7.0.3",
     "moment": "^2.23.0",
     "mongoose": "^5.4.3",
+    "multer": "^1.4.1",
     "redis": "^2.8.0",
     "signale": "^1.3.0",
     "uuid": "^3.3.2"
+  },
+  "nodemonConfig": {
+    "events": {
+      "crash": "node index.js"
+    }
   }
 }

@@ -6,7 +6,6 @@ const {
 } = require("apollo-server");
 const Minio = require("minio");
 
-
 const minioClient = new Minio.Client({
   endPoint: "minio",
   port: 9000,
@@ -173,119 +172,45 @@ const makeResolvers = models => ({
       return "success";
     },
 
-    async uploadPhoto(root, { file }, req) {
-      console.log(JSON.stringify(file));
-      const { stream, filename, mimetype, encoding } = await file;
-      const uuidv4 = require("uuid/v4");
-      let objectId = uuidv4();
+    uploadPhoto(root, { file }, req) {
+      /*
+      var gm = require("gm");
+      var width = 0,
+        height = 0;
+      // obtain the size of an image
+      let thumbnailStream = gm(stream)
+        .size({ bufferStream: true }, function(err, size) {
+          if (!err) {
+            width = size.width;
+            height = size.height;
+            console.log("width = " + size.width);
+            console.log("height = " + size.height);
+          }
+        })
+        .resize(500, 500 + ">")
+        .gravity("Center")
+        .extent(500, 500)
+        .stream("jpg");
       let metaData = {
         "Content-Type": mimetype,
         Filename: filename
       };
+      let thumbnailName = uuidv4();
       minioClient.putObject(
         "photostack",
-        objectId,
-        stream,
+        thumbnailName,
+        thumbnailStream,
         metaData,
         (err, etag) => {
           return console.log(err, etag); // err should be null
         }
       );
 
-      var ExifImage = require("exif").ExifImage;
-
-      try {
-        new ExifImage(stream, function(error, exifData) {
-          if (error) console.log("Error: " + error.message);
-          else console.log(exifData); // Do something with your data!
-        });
-      } catch (error) {
-        console.log("Error: " + error.message);
-      }
-
-      // var gm = require("gm");
-      // var width = 0,
-      //   height = 0;
-      // // obtain the size of an image
-      // let thumbnailStream = gm(stream)
-      //   .size({ bufferStream: true }, function(err, size) {
-      //     if (!err) {
-      //       width = size.width;
-      //       height = size.height;
-      //       console.log("width = " + size.width);
-      //       console.log("height = " + size.height);
-      //     }
-      //   })
-      //   .resize(500, 500 + ">")
-      //   .gravity("Center")
-      //   .extent(500, 500)
-      //   .stream("jpg");
-      // let metaData = {
-      //   "Content-Type": mimetype,
-      //   Filename: filename
-      // };
-      // let thumbnailName = uuidv4();
-      // minioClient.putObject(
-      //   "photostack",
-      //   thumbnailName,
-      //   thumbnailStream,
-      //   metaData,
-      //   (err, etag) => {
-      //     return console.log(err, etag); // err should be null
-      //   }
-      // );
-
-      // .write(outputPath, function (error) {
-      //   if (error) console.log('Error - ', error);
-      // });
-
-      var moment = require("moment");
-
-      let fileObj = {
-        owner: req.session.userId,
-        metadata: {
-          shootTime: 1412180887, //should be exif
-          location: [40, 5] //should be exif
-        },
-        uploadTime: moment().unix(),
-        tags: [
-          "tag2" //should be given by AI
-        ],
-        objectId: objectId,
-        derivatives: {
-          //"key": "value" //Should be set later when a python job is done
-        },
-        postProcessing: {
-          //"process": "minio_id" same
-        },
-        height: height,
-        width: width,
-        // thumbnail: thumbnailName,
-        fileName: filename,
-        mimeType: mimetype,
-        encoding: encoding
-      };
-      const photo = new models.Photo(fileObj);
-      var photoId = null;
-      photo.save().then(response => {
-        photoId = response.id;
-        console.log("Photo saved", response);
+      .write(outputPath, function (error) {
+        if (error) console.log('Error - ', error);
       });
-
-      const redis = require("redis");
-      var pub = redis.createClient(6379, "redis");
-      // pub.publish("objdetection", objectId);
-      // pub.publish("lowlight", objectId);
-      // pub.publish("ocr", objectId);
-      // pub.publish("hdr", objectId);
-      // pub.publish("enhance", objectId);
-      let data = {
-        type: "todo",
-        object_id: objectId,
-        photo_id: photoId
-      };
-      pub.publish("objdetection", JSON.stringify(data));
-      return { filename, mimetype, encoding };
+      */
+      return "fud";
     }
   }
 });

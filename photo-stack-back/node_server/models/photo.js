@@ -22,8 +22,14 @@ const photoSchema = new mongoose.Schema({
   uploadTime: Number,
   tags: [String],
   objectId: String,
-  derivatives: [String],
-  postProcessing: [String],
+  derivatives: {
+    type: Map,
+    of: String
+  },
+  postProcessing: {
+    type: Map,
+    of: String
+  },
   height: Number,
   width: Number,
   mimeType: String,
