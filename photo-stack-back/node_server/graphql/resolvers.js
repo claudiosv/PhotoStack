@@ -186,6 +186,11 @@ const makeResolvers = models => ({
       } else {
         throw new AuthenticationError("You must be logged in");
       }
+    },
+    logout(root, args, req) {
+      req.session.userId = false;
+      req.session.loggedIn = false;
+      return "logged_out";
     }
   }
 });

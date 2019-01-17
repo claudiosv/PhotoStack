@@ -71,6 +71,7 @@ const schema = gql`
       lastName: String
     ): String
     createHeap(name: String!, tags: [String]!): String
+    logout: String
   }
 
   schema {
