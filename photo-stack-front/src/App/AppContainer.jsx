@@ -1,3 +1,4 @@
+import {DH_UNABLE_TO_CHECK_GENERATOR} from 'constants';
 import React from 'react';
 import FileDrop from 'react-file-drop';
 import {Mutation, Query} from 'react-apollo';
@@ -31,75 +32,34 @@ export default class AppContainer extends React.Component {
 			user: {
 				id: '5c195cb83548db0006e1ebaf',
 				firstName: 'Username'
-			},
-			showSearchResults: false,
-			searchTerms: '',
-			selectedPhotoIsOpen: false,
-			selectedPhotoId: ''
+			}
 		};
-		this.handleSearch = this.handleSearch.bind(this);
-		this.handleDrop = this.handleDrop.bind(this);
-		this.handlePhotoSelection = this.handlePhotoSelection.bind(this);
-		this.handlePhotoClose = this.handlePhotoClose.bind(this);
-	}
-
-	componentDidMount() {
-		// Fetch user {id: '', firstName: ''}
-	}
-
-	handleSearch(input) {
-		if (input.length === 0) {
-			this.setState({
-				showSearchResults: false,
-				searchTerms: ''
-			});
-		} else {
-			this.setState({
-				showSearchResults: true,
-				searchTerms: input.map(e => e.label).join(' ')
-			});
-		}
-	}
-
-	handleDrop(files) {
-		console.log(files);
-	}
-
-	handlePhotoSelection(key) {
-		this.setState({
-			selectedPhotoIsOpen: true,
-			selectedPhotoId: key
-		});
-	}
-
-	handlePhotoClose() {
-		this.setState({
-			selectedPhotoIsOpen: false,
-			selectedPhotoId: ''
-		});
 	}
 
 	render() {
 		const {
-			user,
-			showSearchResults,
-			searchTerms,
-			selectedPhotoId,
-			selectedPhotoIsOpen,
-			preferencesOpen
+			user
 		} = this.state;
-		const {match} = this.props;
-		const id = user.id;
 		return (
 			<Mutation mutation={UPLOAD_FILE}>
-				{uploadFile => (
-					<FileDrop onDrop={(fileList) => {
-						console.log(fileList[0]);
-						uploadFile({variables: {file: fileList[0]}})}}>
-						<Query query={GET_USER} variables={{id}}>
+				{ mutate => (
+					<FileDrop
+						onDrop={fileList => {
+							mutate({
+								variables: {
+									file: fileList[0]
+								}
+							});
+						}}
+					>
+						<Query query={GET_USER} variables={{id: user.id}}>
 							{({loading, error, data}) => {
 								if (loading) {
 									return 'Loading...';
+								}
+								if (error) {
+									console.log(error);
+									return null;
 								}
 								return (
 									<Header
@@ -111,17 +71,13 @@ export default class AppContainer extends React.Component {
 								);
 							}}
 						</Query>
-						
-						<App
-							showSearchResults={showSearchResults}
-							searchTerms={searchTerms}
-							onSelectPhoto={this.handlePhotoSelection}
-						/>
+						{this.props.children}
+						{/*
 						<PhotoContainer
 							isOpen={selectedPhotoIsOpen}
 							photoId={selectedPhotoId}
 							onClose={this.handlePhotoClose}
-						/>
+						/> */}
 					</FileDrop>
 				)}
 			</Mutation>

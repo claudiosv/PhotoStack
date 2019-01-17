@@ -5,6 +5,7 @@ import HighlightContainer from '../Highlight';
 import HeapContainer from '../Heap';
 import '../stylesheets/app.scss';
 import MosaicContainer from '../Mosaic';
+import SearchLayout from '../Layout/SearchLayout';
 
 export default class App extends React.PureComponent {
 	render() {
@@ -22,9 +23,9 @@ export default class App extends React.PureComponent {
 						<HeapContainer/>
 					</Container>
 				</Container>
-				<Container id="mosaic" className={(showSearchResults ? 'slideOut' : 'slideIn')}>
+				{/* <Container id="mosaic" className={(showSearchResults ? 'slideOut' : 'slideIn')}>
 					<MosaicContainer searchTerms={searchTerms} onSelectPhoto={onSelectPhoto}/>
-				</Container>
+				</Container> */}
 			</Section>
 		);
 	}

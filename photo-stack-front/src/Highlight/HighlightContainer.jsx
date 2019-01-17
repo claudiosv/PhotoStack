@@ -5,61 +5,74 @@ import {Box, Image, Tile} from 'bloomer';
 import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
 
+const GET_HIGHLIGHTS = gql`
+{
+	getHighlights{
+	  objectId
+	}
+  }
+`;
+
 export default class HighlightContainer extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	componentDidMount() {
-		// Load highlight photos
-	}
-
 	render() {
 		return (
-			<Tile isAncestor>
-				<Tile isParent isSize={6}>
-					<Tile isChild url="https://images.unsplash.com/photo-1524293568345-75d62c3664f7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&h=1000" render={
-						props => (
-							<Box>
-								<Image src={props.url}/>
-							</Box>
-						)
-					}/>
-				</Tile>
-				<Tile isParent isVertical>
-					<Tile isChild render={
-						props => (
-							<Box>
-								<Image isRatio="square" src="https://images.unsplash.com/photo-1515688403147-44e0433f180f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=480&h=480"/>
-							</Box>
-						)
-					}/>
-					<Tile isChild render={
-						props => (
-							<Box>
-								<Image isRatio="square" src="https://source.unsplash.com/Dm-qxdynoEc/800x799"/>
-							</Box>
-						)
-					}/>
-				</Tile>
-				<Tile isParent isVertical>
-					<Tile isChild render={
-						props => (
-							<Box>
-								<Image isRatio="square" src="https://images.unsplash.com/photo-1495001258031-d1b407bc1776?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=480&h=480"/>
-							</Box>
-						)
-					}/>
-					<Tile isChild render={
-						props => (
-							<Box>
-								<Image isRatio="square" src="https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=480&h=480"/>
-							</Box>
-						)
-					}/>
-				</Tile>
-			</Tile>
+			<Query query={GET_HIGHLIGHTS}>
+				{({loading, error, data}) => {
+					const highlightIds = data.getHighlights;
+					if (loading) {
+						return 'Loading...';
+					}
+					if (error) {
+						console.log(error);
+						return null;
+					}
+					return (
+						<Tile isAncestor>
+							<Tile isParent isSize={6}>
+								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[0].objectId} render={
+									props => (
+										<Box>
+											<Image src={props.url}/>
+										</Box>
+									)
+								}/>
+							</Tile>
+							<Tile isParent isVertical>
+								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[1].objectId} render={
+									props => (
+										<Box>
+											<Image src={props.url}/>
+										</Box>
+									)
+								}/>
+								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[2].objectId} render={
+									props => (
+										<Box>
+											<Image src={props.url}/>
+										</Box>
+									)
+								}/>
+							</Tile>
+							<Tile isParent isVertical>
+								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[3].objectId} render={
+									props => (
+										<Box>
+											<Image src={props.url}/>
+										</Box>
+									)
+								}/>
+								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[4].objectId} render={
+									props => (
+										<Box>
+											<Image src={props.url}/>
+										</Box>
+									)
+								}/>
+							</Tile>
+						</Tile>
+					);
+				}}
+			</Query>
 		);
 	}
 }

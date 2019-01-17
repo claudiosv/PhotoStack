@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "apollo-boost": "^0.1.23",
     "bloomer": "^0.6.5",
     "bulma": "^0.7.2",

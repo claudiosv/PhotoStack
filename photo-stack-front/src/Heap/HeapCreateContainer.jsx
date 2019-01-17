@@ -25,7 +25,7 @@ export default class HeapCreateContainer extends React.Component {
 		return (
 			<Page title="Create new Heap">
 				<HeapCreate onHeapCreate={this.onHeapCreate}/>
-				{confirmStatus ? <Redirect to="/"/> : null}
+				{confirmStatus ? <Redirect to="/holidays"/> : null}
 			</Page>
 		);
 	}
