@@ -146,41 +146,41 @@ app.post("/upload/", upload.array("photos", 12), async (req, res) => {
         buffer,
         metaData,
         (err, etag) => {
-          return err
-            ? console.log("Error", err, etag)
-            : console.log("File uploaded with etag", etag); // err should be null
+          if (err) console.log("Error", err, etag);
+          signale.log("File uploaded with etag", etag);
+          new ExifImage(buffer, function(error, exifData) {
+            if (error) console.log("Exif Error: " + error.message);
+            let fileObj = {
+              owner: req.session.userId,
+              metadata: {
+                ...exifData.exif
+              },
+              uploadTime: moment().unix(),
+              objectId: objectId,
+              height: exifData.exif.ExifImageHeight,
+              width: exifData.exif.ExifImageWidth,
+              // thumbnail: thumbnailName,
+              fileName: originalname,
+              mimeType: mimetype,
+              encoding: encoding
+            };
+            const photo = new Photo(fileObj);
+            photo
+              .save()
+              .then(response => {
+                let data = {
+                  type: "todo",
+                  object_id: objectId,
+                  photo_id: response.id
+                };
+                pub.publish("objdetection", JSON.stringify(data));
+                console.log("Photo saved", response);
+              })
+              .catch(x => signale.error("Tiakane", x));
+          });
         }
       );
-      new ExifImage(buffer, function(error, exifData) {
-        if (error) console.log("Exif Error: " + error.message);
-        let fileObj = {
-          owner: req.session.userId,
-          metadata: {
-            ...exifData.exif
-          },
-          uploadTime: moment().unix(),
-          objectId: objectId,
-          height: exifData.exif.ExifImageHeight,
-          width: exifData.exif.ExifImageWidth,
-          // thumbnail: thumbnailName,
-          fileName: originalname,
-          mimeType: mimetype,
-          encoding: encoding
-        };
-        const photo = new Photo(fileObj);
-        photo
-          .save()
-          .then(response => {
-            let data = {
-              type: "todo",
-              object_id: objectId,
-              photo_id: response.id
-            };
-            pub.publish("objdetection", JSON.stringify(data));
-            console.log("Photo saved", response);
-          })
-          .catch(x => signale.error("Tiakane", x));
-      });
+
       // pub.publish("objdetection", objectId);
       // pub.publish("lowlight", objectId);
       // pub.publish("ocr", objectId);
