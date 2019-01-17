@@ -1,3 +1,5 @@
+// Useless piece of crap
+
 import React from 'react';
 import {Switch, Route} from 'react-router-dom';
 import SignInContainer from '../SignIn';
@@ -19,6 +21,7 @@ export default class AppRouter extends React.Component {
 				</Switch>
 				<Route path="/preferences" component={PreferencesContainer}/>
 				<Route path="/create" component={HeapCreateContainer}/>
+				{/* <Route path="/holidays" component={HeapView}/> */}
 			</>
 		);
 	}

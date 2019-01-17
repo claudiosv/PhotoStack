@@ -2,6 +2,20 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import Session from '../Session';
 import SignUp from './SignUp.jsx';
+import ApolloClient from 'apollo-boost';
+import gql from 'graphql-tag';
+
+const GET_AUTOCOMPLETE = gql`
+mutation ($email: String!, $password: String!, $firstName: String!, $lastName: String!){
+	createUser(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
+		  id
+	  }
+}
+`;
+
+const client = new ApolloClient({
+	uri: 'http://localhost:4000/graphql'
+});
 
 export default class SignUpContainer extends React.Component {
 	constructor(props) {
