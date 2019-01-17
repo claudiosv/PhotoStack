@@ -30,55 +30,12 @@ export default class AppContainer extends React.Component {
     super(props);
     this.state = {
       user: {
-        id: "5c3b59f72a066d02233b4263",
+        id: "5c195cb83548db0006e1ebaf",
         firstName: "Username"
-      },
-      showSearchResults: false,
-      searchTerms: "",
-      selectedPhotoIsOpen: false,
-      selectedPhotoId: ""
+      }
     };
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleDrop = this.handleDrop.bind(this);
-    this.handlePhotoSelection = this.handlePhotoSelection.bind(this);
-    this.handlePhotoClose = this.handlePhotoClose.bind(this);
   }
 
-  componentDidMount() {
-    // Fetch user {id: '', firstName: ''}
-  }
-
-  handleSearch(input) {
-    if (input.length === 0) {
-      this.setState({
-        showSearchResults: false,
-        searchTerms: ""
-      });
-    } else {
-      this.setState({
-        showSearchResults: true,
-        searchTerms: input.map(e => e.label).join(" ")
-      });
-    }
-  }
-
-  handleDrop(files) {
-    console.log(files);
-  }
-
-  handlePhotoSelection(key) {
-    this.setState({
-      selectedPhotoIsOpen: true,
-      selectedPhotoId: key
-    });
-  }
-
-  handlePhotoClose() {
-    this.setState({
-      selectedPhotoIsOpen: false,
-      selectedPhotoId: ""
-    });
-  }
   uploadAction = (fileList, test) => {
     console.log("up action", fileList, test);
     var data = new FormData();
@@ -108,75 +65,14 @@ export default class AppContainer extends React.Component {
     );
   };
 
-  render() {
-    const {
-      user,
-      showSearchResults,
-      searchTerms,
-      selectedPhotoId,
-      selectedPhotoIsOpen,
-      preferencesOpen
-    } = this.state;
-    const { match } = this.props;
-
-    const id = user.id;
-    return (
-      <FileDrop onDrop={this.uploadAction}>
-        <Query query={GET_USER} variables={{ id }}>
-          {({ loading, error, data }) => {
-            if (loading) {
-              return "Loading...";
-            }
-            return (
-              <Header
-                type="search"
-                userName={data.getUserById.firstName}
-                onSearch={this.handleSearch}
-                onModal={() => console.log("error")}
-                onPreferences={this.togglePreferences}
-              />
-            );
-          }}
-        </Query>
-
-        <App
-          showSearchResults={showSearchResults}
-          searchTerms={searchTerms}
-          onSelectPhoto={this.handlePhotoSelection}
-        />
-        <PhotoContainer
-          isOpen={selectedPhotoIsOpen}
-          photoId={selectedPhotoId}
-          onClose={this.handlePhotoClose}
-        />
-      </FileDrop>
-    );
-  }
-	constructor(props) {
-		super(props);
-		this.state = {
-			user: {
-				id: '5c195cb83548db0006e1ebaf',
-				firstName: 'Username'
-			}
-		};
-	}
-
+ 
 	render() {
 		const {
 			user
 		} = this.state;
 		return (
-			<Mutation mutation={UPLOAD_FILE}>
-				{ mutate => (
 					<FileDrop
-						onDrop={fileList => {
-							mutate({
-								variables: {
-									file: fileList[0]
-								}
-							});
-						}}
+						onDrop={this.uploadAction}
 					>
 						<Query query={GET_USER} variables={{id: user.id}}>
 							{({loading, error, data}) => {
@@ -205,8 +101,5 @@ export default class AppContainer extends React.Component {
 							onClose={this.handlePhotoClose}
 						/> */}
 					</FileDrop>
-				)}
-			</Mutation>
-		);
-	}
+				);}
 }
