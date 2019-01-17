@@ -38,17 +38,16 @@ const schema = gql`
   }
 
   type Query {
-    getPhotosByUser: [Photo]
-    getUserById(id: ID!): User
-    getUserByEmail(email: String!): User
-    loginUser(email: String!, password: String!): String
+    getPhotos: [Photo]
+    getUser: User
+    loginUser(email: String!, password: String!): User
     searchPhotos(query: String!): [Photo]
     getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
     getHeaps: [Heap]
-    bcrypt(pass: String): String
     getHeap(heapID: ID!): Heap
     getPhoto(photoID: ID!): Photo
+    isLoggedIn: String
   }
 
   type File {
@@ -72,8 +71,6 @@ const schema = gql`
       lastName: String
     ): String
     createHeap(name: String!, tags: [String]!): String
-    uploadPhoto(file: Upload!): File!
-    test(query: String): String
   }
 
   schema {

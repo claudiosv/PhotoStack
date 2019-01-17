@@ -2,7 +2,8 @@ const {
   ApolloServer,
   ApolloError,
   UserInputError,
-  gql
+  gql,
+  AuthenticationError
 } = require("apollo-server");
 const Minio = require("minio");
 
@@ -16,23 +17,26 @@ const minioClient = new Minio.Client({
 
 const makeResolvers = models => ({
   Query: {
-    getUserById(root, { id }, request, schema) {
-      return models.User.findById(id);
+    getUser(root, {}, request, schema) {
+      if (request.session.userId) {
+        return models.User.findById(request.session.userId);
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
-    getUserByEmail: (root, { email }, request, schema) => {
-      return models.User.findOne({ email });
-    },
-
-    getPhotosByUser(root, {}, request, schema) {
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Photo.find(
-        { owner: request.session.userId },
-        (err, docs) => {
-          if (err) console.log(err);
-          return docs;
-        }
-      );
+    getPhotos(root, {}, request, schema) {
+      if (request.session.userId) {
+        return models.Photo.find(
+          { owner: request.session.userId },
+          (err, docs) => {
+            if (err) console.log(err);
+            return docs;
+          }
+        );
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
     loginUser(root, { email, password }, request) {
@@ -46,98 +50,116 @@ const makeResolvers = models => ({
         if (bcrypt.compareSync(password, docs.password)) {
           request.session.loggedIn = true;
           request.session.userId = docs.id;
-          return "success";
+          return docs;
         } else {
-          return "fail";
+          throw new UserInputError("Wrong username/password");
         }
       });
     },
 
-    bcrypt(root, { pass }, req) {
-      const bcrypt = require("bcryptjs");
-      const saltRounds = 10;
-      let hashedPassword = bcrypt.hashSync(pass, saltRounds);
-      return hashedPassword;
+    isLoggedIn(root, {}, req) {
+      return JSON.stringify({
+        loggedIn: req.session.loggedIn,
+        userId: req.session.userId
+      });
     },
 
     searchPhotos(root, { query }, request) {
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Photo.find(
-        { owner: request.session.userId, tags: query },
-        (err, docs) => {
-          if (err) console.log(err);
-          return docs;
-        }
-      );
+      if (request.session.userId) {
+        return models.Photo.find(
+          { owner: request.session.userId, tags: query },
+          (err, docs) => {
+            if (err) console.log(err);
+            return docs;
+          }
+        );
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
     getAutocomplete(root, { query }, request) {
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Photo.find({
-        owner: request.session.userId,
-        tags: new RegExp(`${query}(.*)`, "i")
-      }).then(photo => {
-        var completions = new Set();
-        photo.forEach(doc => doc.tags.forEach(x => completions.add(x)));
-        return Array.from(completions);
-      });
+      if (request.session.userId) {
+        return models.Photo.find({
+          owner: request.session.userId,
+          tags: new RegExp(`${query}(.*)`, "i")
+        }).then(photo => {
+          var completions = new Set();
+          photo.forEach(doc => doc.tags.forEach(x => completions.add(x)));
+          return Array.from(completions);
+        });
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
     getHighlights(root, {}, request) {
       //last 5 uploaded photos
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Photo.find({ owner: request.session.userId }, null, {
-        skip: 0, // Starting Row
-        limit: 5, // Ending Row
-        sort: {
-          uploadTime: -1 //Sort by Date Added DESC
-        }
-      }).then(response => response);
+      if (request.session.userId) {
+        return models.Photo.find({ owner: request.session.userId }, null, {
+          skip: 0, // Starting Row
+          limit: 5, // Ending Row
+          sort: {
+            uploadTime: -1 //Sort by Date Added DESC
+          }
+        }).then(response => response);
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
     getHeaps(root, {}, request) {
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Heap.find(
-        { owner: request.session.userId },
-        (err, docs) => {
-          if (err) console.log(err);
-          console.log(docs);
-          return docs;
-        }
-      ).then(response => {
-        console.log(response);
-        return response;
-      });
+      if (request.session.userId) {
+        return models.Heap.find(
+          { owner: request.session.userId },
+          (err, docs) => {
+            if (err) console.log(err);
+            console.log(docs);
+            return docs;
+          }
+        ).then(response => {
+          console.log(response);
+          return response;
+        });
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
     getHeap(root, { id }) {
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Heap.findOne(
-        { id: id, owner: request.session.userId },
-        (err, docs) => {
-          if (err) console.log(err);
-          console.log(docs);
-          return docs;
-        }
-      ).then(response => {
-        console.log(response);
-        return response;
-      });
+      if (request.session.userId) {
+        return models.Heap.findOne(
+          { id: id, owner: request.session.userId },
+          (err, docs) => {
+            if (err) console.log(err);
+            console.log(docs);
+            return docs;
+          }
+        ).then(response => {
+          console.log(response);
+          return response;
+        });
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
 
     getPhoto(root, { id }) {
-      request.session.userId = "52ffc4a5d85242602e000000";
-      return models.Photo.findOne(
-        { id: id, owner: request.session.userId },
-        (err, docs) => {
-          if (err) console.log(err);
-          console.log(docs);
-          return docs;
-        }
-      ).then(response => {
-        console.log(response);
-        return response;
-      });
+      if (request.session.userId) {
+        return models.Photo.findOne(
+          { id: id, owner: request.session.userId },
+          (err, docs) => {
+            if (err) console.log(err);
+            console.log(docs);
+            return docs;
+          }
+        ).then(response => {
+          console.log(response);
+          return response;
+        });
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     }
   },
   Mutation: {
@@ -146,35 +168,31 @@ const makeResolvers = models => ({
       return user.save().then(response => response);
     },
     updateUser(root, args, req) {
-      req.session.userId = "5c3b59f72a066d02233b4263";
-      return models.User.findByIdAndUpdate(req.session.userId, {
-        ...args
-      }).then(response => JSON.stringify(response));
+      if (request.session.userId) {
+        return models.User.findByIdAndUpdate(req.session.userId, {
+          ...args
+        }).then(response => JSON.stringify(response));
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
     },
     createHeap(root, args, req) {
-      console.log("Args: ", args);
-      const heap = new models.Heap({
-        ...args,
-        owner: req.session.userId
-      });
-      return heap.save().then(response => JSON.stringify(response));
-    },
-    async test(root, { query }, req) {
-      const redis = require("redis");
-      var pub = redis.createClient(6379, "redis");
-      let data = {
-        type: "todo",
-        object_id: "1397194_10152003738382375_735564635_o.jpg",
-        photo_id: query
-      };
-      pub.publish("objdetection", JSON.stringify(data));
+      if (request.session.userId) {
+        const heap = new models.Heap({
+          ...args,
+          owner: req.session.userId
+        });
+        return heap.save().then(response => JSON.stringify(response));
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
+    }
+  }
+});
 
-      return "success";
-    },
+module.exports = makeResolvers;
 
-    uploadPhoto(root, { file }, req) {
-      /*
-      var gm = require("gm");
+/*var gm = require("gm");
       var width = 0,
         height = 0;
       // obtain the size of an image
@@ -210,9 +228,3 @@ const makeResolvers = models => ({
         if (error) console.log('Error - ', error);
       });
       */
-      return "fud";
-    }
-  }
-});
-
-module.exports = makeResolvers;
