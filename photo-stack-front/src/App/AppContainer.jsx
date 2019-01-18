@@ -1,41 +1,19 @@
-import {DH_UNABLE_TO_CHECK_GENERATOR} from 'constants';
 import React from 'react';
 import FileDrop from 'react-file-drop';
-import {Mutation, Query} from 'react-apollo';
+import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
 import Header from '../Header';
-import PhotoContainer from '../Photo';
-import App from './App.jsx';
-
-const UPLOAD_FILE = gql`
-  mutation uploadPhoto($file: Upload!) {
-    uploadPhoto(file: $file) {
-      mimetype
-      encoding
-      filename
-    }
-  }
-`;
+import {Redirect} from '@reach/router';
 
 const GET_USER = gql`
-  query getUserById($id: ID!) {
-    getUserById(id: $id) {
+  query getUser {
+    getUser {
       firstName
     }
   }
 `;
 
 export default class AppContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: {
-        id: "5c195cb83548db0006e1ebaf",
-        firstName: "Username"
-      }
-    };
-  }
-
   uploadAction = (fileList, test) => {
     console.log("up action", fileList, test);
     var data = new FormData();
@@ -67,30 +45,27 @@ export default class AppContainer extends React.Component {
 
  
 	render() {
-		const {
-			user
-		} = this.state;
 		return (
 					<FileDrop
 						onDrop={this.uploadAction}
 					>
-						<Query query={GET_USER} variables={{id: user.id}}>
+						<Query query={GET_USER}>
 							{({loading, error, data}) => {
 								if (loading) {
 									return 'Loading...';
 								}
-								if (error) {
-									console.log(error);
-									return null;
-								}
-								return (
-									<Header
-										type="search"
-										userName={data.getUserById.firstName}
-										onSearch={this.handleSearch}
-										onPreferences={this.togglePreferences}
-									/>
-								);
+								if (data) {
+									return (
+                    <Header
+                      type="search"
+                      userName={data.getUserById.firstName}
+                      onSearch={this.handleSearch}
+                      onPreferences={this.togglePreferences}
+                    />
+                  );
+                }
+                return <Redirect to="/signin"/>
+								
 							}}
 						</Query>
 						{this.props.children}
