@@ -43,7 +43,7 @@ export default class MosaicContainer extends React.Component {
 									const r = gcd(width, height);
 									return {
 										key: id,
-										src: 'http://localhost:4001/image/' + objectId,
+										src: 'http://localhost:4000/image/' + objectId,
 										width: width / r,
 										height: height / r
 									};

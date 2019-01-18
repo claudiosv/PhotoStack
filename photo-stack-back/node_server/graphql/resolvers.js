@@ -5,6 +5,7 @@ const {
   gql,
   AuthenticationError
 } = require("apollo-server");
+
 const Minio = require("minio");
 
 const minioClient = new Minio.Client({
@@ -47,7 +48,7 @@ const makeResolvers = models => ({
           return "fail";
         }
       }).then(docs => {
-        if (bcrypt.compareSync(password, docs.password)) {
+        if (docs && bcrypt.compareSync(password, docs.password)) {
           request.session.loggedIn = true;
           request.session.userId = docs.id;
           return docs;

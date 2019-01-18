@@ -18,7 +18,6 @@ export default class HighlightContainer extends React.Component {
 		return (
 			<Query query={GET_HIGHLIGHTS}>
 				{({loading, error, data}) => {
-					const highlightIds = data.getHighlights;
 					if (loading) {
 						return 'Loading...';
 					}
@@ -26,10 +25,11 @@ export default class HighlightContainer extends React.Component {
 						console.log(error);
 						return null;
 					}
+					const highlightIds = data.getHighlights;
 					return (
 						<Tile isAncestor>
 							<Tile isParent isSize={6}>
-								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[0].objectId} render={
+								<Tile isChild url={'http://localhost:4000/image/' + highlightIds[0].objectId} render={
 									props => (
 										<Box>
 											<Image src={props.url}/>
@@ -38,14 +38,14 @@ export default class HighlightContainer extends React.Component {
 								}/>
 							</Tile>
 							<Tile isParent isVertical>
-								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[1].objectId} render={
+								<Tile isChild url={'http://localhost:4000/image/' + highlightIds[1].objectId} render={
 									props => (
 										<Box>
 											<Image src={props.url}/>
 										</Box>
 									)
 								}/>
-								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[2].objectId} render={
+								<Tile isChild url={'http://localhost:4000/image/' + highlightIds[2].objectId} render={
 									props => (
 										<Box>
 											<Image src={props.url}/>
@@ -54,14 +54,14 @@ export default class HighlightContainer extends React.Component {
 								}/>
 							</Tile>
 							<Tile isParent isVertical>
-								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[3].objectId} render={
+								<Tile isChild url={'http://localhost:4000/image/' + highlightIds[3].objectId} render={
 									props => (
 										<Box>
 											<Image src={props.url}/>
 										</Box>
 									)
 								}/>
-								<Tile isChild url={'http://localhost:4001/image/' + highlightIds[4].objectId} render={
+								<Tile isChild url={'http://localhost:4000/image/' + highlightIds[4].objectId} render={
 									props => (
 										<Box>
 											<Image src={props.url}/>
