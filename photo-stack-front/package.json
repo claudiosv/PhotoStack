@@ -5,6 +5,9 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "apollo-boost": "^0.1.23",
+    "apollo-cache-inmemory": "^1.4.0",
+    "apollo-client": "^2.4.9",
+    "apollo-link-http": "^1.5.9",
     "bloomer": "^0.6.5",
     "bulma": "^0.7.2",
     "formik": "^1.4.2",

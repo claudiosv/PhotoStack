@@ -5,7 +5,6 @@ const {
   gql,
   AuthenticationError
 } = require("apollo-server");
-
 const Minio = require("minio");
 
 const minioClient = new Minio.Client({
@@ -19,6 +18,7 @@ const minioClient = new Minio.Client({
 const makeResolvers = models => ({
   Query: {
     getUser(root, {}, request, schema) {
+      console.log('Get user: ' + JSON.stringify(request.session))
       if (request.session.userId) {
         return models.User.findById(request.session.userId);
       } else {
@@ -27,6 +27,7 @@ const makeResolvers = models => ({
     },
 
     getPhotos(root, {}, request, schema) {
+      console.log('Get photos: ' + JSON.stringify(request.session));
       if (request.session.userId) {
         return models.Photo.find(
           { owner: request.session.userId },
