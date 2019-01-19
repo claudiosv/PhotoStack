@@ -6,7 +6,7 @@ import Mosaic from './Mosaic.jsx';
 
 const GET_PHOTOSET = gql`
 {
-	getPhotosByUser {
+	getPhotos{
 		id
 		objectId
 		height
@@ -33,17 +33,17 @@ export default class MosaicContainer extends React.Component {
 						console.log(error);
 						return null;
 					}
-					const {getPhotosByUser} = data;
-					console.log(getPhotosByUser);
+					const {getPhotos} = data;
+					console.log(getPhotos);
 					return (
 						<Mosaic
 							title={title}
 							photoSet={
-								getPhotosByUser.map(({id, objectId, height, width}) => {
+								getPhotos.map(({id, objectId, height, width}) => {
 									const r = gcd(width, height);
 									return {
 										key: id,
-										src: 'http://localhost:4000/image/' + objectId,
+										src: 'http://localhost:3000/image/' + objectId,
 										width: width / r,
 										height: height / r
 									};

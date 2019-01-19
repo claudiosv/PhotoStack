@@ -11,7 +11,7 @@ export default class MainLayout extends React.Component {
 				<Container>
 					<Container>
 						<Title isSize={4}>Highlights</Title>
-						<HighlightContainer/>
+						{/* <HighlightContainer/> */}
 					</Container>
 					<Container>
 						<Title isSize={4}>Heaps</Title>

@@ -6,13 +6,9 @@ import * as Yup from 'yup';
 import ApolloClient from 'apollo-boost';
 import gql from 'graphql-tag';
 
-const client = new ApolloClient({
-	uri: 'http://localhost:4000/graphql'
-});
-
 const GET_DETAILS = gql`
-query getUserById($id: ID!){
-  getUserById(id: $id){
+{
+  getUser{
 	  firstName
   }
 }
@@ -40,6 +36,7 @@ class Preferences extends React.PureComponent {
 									<Label>First name</Label>
 									<Control>
 										<Input
+											isUnselectable
 											isSize="large"
 											isColor={errors.firstName && touched.firstName ? 'danger' : ''}
 											name="firstName"
@@ -164,16 +161,15 @@ const PreferencesSchema = Yup.object().shape({
 async function dbValues(){ 
 	const {data} = await client.query({
 		query: GET_DETAILS,
-		variables: {id: '5c195cb83548db0006e1ebaf'}
 	});
-	return data.getUserById;
+	return data.getUser;
 }
 
 const FormikAdapter = withFormik({
 	mapPropsToValues: () => ({
-		firstName: 'Claudio',
-		lastName: 'Spiess',
-		email: 'cemail@gmail.com',
+		firstName: '',
+		lastName: '',
+		email: '',
 		password: '',
 		passwordConfirmation: ''
 	}),

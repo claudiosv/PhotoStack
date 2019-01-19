@@ -2,7 +2,7 @@ import React from 'react';
 import {navigate, Redirect} from '@reach/router';
 import Session from '../Session';
 import SignIn from './SignIn.jsx';
-import {Query} from 'react-apollo';
+import {ApolloConsumer} from 'react-apollo';
 import gql from 'graphql-tag';
 import {Help} from 'bloomer';
 

@@ -55,10 +55,11 @@ export default class AppContainer extends React.Component {
 									return 'Loading...';
 								}
 								if (data) {
+                  console.log(data);
 									return (
                     <Header
                       type="search"
-                      userName={data.getUserById.firstName}
+                      userName={data.getUser.firstName}
                       onSearch={this.handleSearch}
                       onPreferences={this.togglePreferences}
                     />

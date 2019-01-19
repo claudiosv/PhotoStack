@@ -11,12 +11,6 @@ export default class PreferencesContainer extends React.Component {
 		this.handleClose = this.handleClose.bind(this);
 	}
 
-	// componentDidMount(){
-	// 	this.setState({
-	// 		isOpen: true
-	// 	});
-	// }
-
 	handleClose() {
 		const {history} = this.props;
 		this.setState({

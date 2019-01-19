@@ -86,7 +86,6 @@ app.use(
       host: "redis",
       port: 6379
     }),
-    name: "hoi",
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
@@ -142,7 +141,6 @@ const upload = multer({
 });
 
 app.post("/upload/", upload.array("photos", 12), async (req, res) => {
-  req.session.userId = "52ffc4a5d85242602e000000";
   try {
     const redis = require("redis");
     const pub = redis.createClient(6379, "redis");
