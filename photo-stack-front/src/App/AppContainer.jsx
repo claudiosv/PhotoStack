@@ -20,7 +20,7 @@ export default class AppContainer extends React.Component {
     for (let i = 0; i < fileList.length; i++)
       data.append("photos", fileList[i]);
 
-    fetch("http://localhost:4000/upload", {
+    fetch("http://localhost:3000/upload", {
       mode: "no-cors",
       method: "POST",
       // headers: {

@@ -25,7 +25,7 @@ import HeapCreateContainer from './Heap/HeapCreateContainer.jsx'; // INSPECT NAS
 
 const client = new ApolloClient({
 	link: createHttpLink({
-		uri: 'http://localhost:4000/graphql',
+		uri: 'http://localhost:3000/graphql',
 		credentials: 'same-origin',
 	}),
 	cache: new InMemoryCache()

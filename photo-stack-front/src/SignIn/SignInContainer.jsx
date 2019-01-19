@@ -41,16 +41,13 @@ export default class SignInContainer extends React.Component {
 					<SignIn 
 						onSignIn={
 							async (email, password) => {
-							const {error, data} = await client.query({
+							client.query({
 									query: LOGIN,
 									variables: {email, password}
-							});
-							if (data) {
-								console.log('redir ', data);
-								// navigate('/');
-							}else{
-								this.handleError(error);
-							}
+							}).then(data => {
+									console.log('redir ', data);
+									navigate('/');
+							}).catch(error => this.handleError(error));
 							}
 						}/>)
 						}
