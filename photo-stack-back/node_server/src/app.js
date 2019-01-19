@@ -166,10 +166,10 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
           new ExifImage(buffer, function(error, exifData) {
             if (error) {
               console.log("Exif Error: " + error.message);
-              exifData = { exif: {} };
-              exifData.exif.ExifImageHeight = 0;
-              exifData.exif.ExifImageWidth = 0;
             }
+            exifData = { exif: {} };
+            var sizeOf = require("image-size");
+            var dimensions = sizeOf(buffer);
             let fileObj = {
               owner: req.session.userId,
               metadata: {
@@ -177,8 +177,8 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
               },
               uploadTime: moment().unix(),
               objectId: objectId,
-              height: exifData.exif.ExifImageHeight,
-              width: exifData.exif.ExifImageWidth,
+              height: dimensions.height,
+              width: dimensions.width,
               // thumbnail: thumbnailName,
               fileName: originalname,
               mimeType: mimetype,
@@ -237,10 +237,15 @@ sub.on("message", function(channel, message) {
       if (data.type == "done") {
         //insert into mongo
         signale.debug("SUPER POWER AI", data.objects);
+        var objects_split = new Set();
+        data.objects.forEach(tag =>
+          tag.split("_").forEach(split => objects_split.add(split))
+        );
+        console.log(objects_split);
         Photo.findByIdAndUpdate(data.photo_id, {
           $addToSet: {
             tags: {
-              $each: data.objects
+              $each: Array.from(objects_split)
             }
           }
         }).then(res => signale.debug(res));

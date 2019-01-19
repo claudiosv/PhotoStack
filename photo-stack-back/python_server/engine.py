@@ -21,19 +21,21 @@ def objdetection_handler(message):
     img_path = os.path.join(execution_path, "tmp", data['object_id'])
     minioClient.fget_object('photostack', data['object_id'], img_path, request_headers=None)
     prediction = ImagePrediction()
-    prediction.setModelTypeAsSqueezeNet()
-    prediction.setModelPath(os.path.join(execution_path, "squeezenet_weights_tf_dim_ordering_tf_kernels.h5"))
+    prediction.setModelTypeAsInceptionV3()
+    prediction.setModelPath(os.path.join(execution_path, "inception_v3_weights_tf_dim_ordering_tf_kernels.h5"))
     prediction.loadModel()
     predictions, probabilities = prediction.predictImage(img_path, result_count=3)
     pred_list = list()
 
     for eachPrediction, eachProbability in zip(predictions, probabilities):
-        if eachProbability > 0:
+        print("Predicted: ", eachProbability, ":", eachPrediction)
+        if eachProbability > 15:
            pred_list.append(eachPrediction)
     result = { 'type': "done", "photo_id": data['photo_id'], "object_id": data['object_id'], "objects": pred_list }
     json_string = json.dumps(result)
     r = redis.Redis(host='redis', port=6379)
     r.publish('objdetection', json_string)
+    os.remove(img_path)
 
 def main():
     print("Engine started")
