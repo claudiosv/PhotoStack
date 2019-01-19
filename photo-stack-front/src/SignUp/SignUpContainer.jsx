@@ -13,10 +13,6 @@ mutation ($email: String!, $password: String!, $firstName: String!, $lastName: S
 }
 `;
 
-const client = new ApolloClient({
-	uri: 'http://localhost:4000/graphql'
-});
-
 export default class SignUpContainer extends React.Component {
 	constructor(props) {
 		super(props);

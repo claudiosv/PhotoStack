@@ -65,7 +65,7 @@ export default class AppContainer extends React.Component {
                   );
                 }
                 console.log(JSON.stringify(error));
-                return null //<Redirect to="/signin"/>
+                return <Redirect to="/signin"/>
 								
 							}}
 						</Query>

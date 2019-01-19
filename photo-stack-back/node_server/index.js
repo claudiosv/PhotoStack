@@ -54,11 +54,7 @@ connect();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: (context) => {
-    console.log(context);
-    const {req} = context;
-    return req;
-  },
+  context: ({req}) => req,
   uploads: {
     // Limits here should be stricter than config for surrounding
     // infrastructure such as Nginx so errors can be handled elegantly by
@@ -77,7 +73,7 @@ const server = new ApolloServer({
   },
   playground: {
     settings: {
-      "request.credentials": "include"
+      "request.credentials": "same-origin"
     }
   }
 });

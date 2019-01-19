@@ -1,9 +1,10 @@
 import React from 'react';
-import {Redirect} from '@reach/router';
+import {navigate, Redirect} from '@reach/router';
 import Session from '../Session';
 import SignIn from './SignIn.jsx';
-import {ApolloConsumer} from 'react-apollo';
+import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
+import {Help} from 'bloomer';
 
 const LOGIN = gql`
   query Login($email: String!, $password: String!) {
@@ -17,34 +18,50 @@ export default class SignInContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			status: false
+			email: '',
+			password: '',
+			error: ''
 		};
-		this.onSignIn = this.onSignIn.bind(this);
+		this.handleError = this.handleError.bind(this);
 	}
 
-	onSignIn() {
+	handleError({error}){
+		console.log('HOI');
+		if (error) {
+			this.setState({
+				error: error.message
+			});
+		}
+		navigate('/');
+	}
+
+	handleSignIn(email, password) {
 		this.setState({
-			status: true
-		});
+			email,
+			password
+		})
 	}
 
 	render() {
-		const {status} = this.state;
+		const {error, email, password} = this.state;
 		return (
 			<Session>
-				<ApolloConsumer>
-					{(client) => (
-						<SignIn onSignIn={
-							async (email, password) => {
-								const {error, data} = await client.query({
-									query: LOGIN,
-									variables: {email, password}
-								});
-							}
-						}/>
-					)}
-				</ApolloConsumer>
-				{status && <Redirect to="/"/>}
+				{error === '' ? null : <Help isColor="danger">{error}</Help>}
+				<SignIn onSignIn={this.handleSignIn}/>
+				{email && 
+					<Query query={LOGIN} variables={{email, password}}>
+							{({loading, error, data}) => {
+								if (loading) {
+									return null
+								}
+								if (data) {
+									return <Redirect to="/"/>
+								}
+								this.handleError(error);
+								return null;
+							}}
+					</Query>
+				}
 			</Session>
 		);
 	}

@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router} from '@reach/router';
 
-import {ApolloClient} from "apollo-client";
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -21,14 +21,12 @@ import PhotoLayout from './Layout/PhotoLayout.jsx';
 import PreferencesLayout from './Layout/PreferencesLayout.jsx';
 import HeapLayout from './Layout/HeapLayout.jsx';
 import HeapCreateContainer from './Heap/HeapCreateContainer.jsx'; // INSPECT NASTY HERE!!
-// link: createHttpLink({
-	// 	credentials: 'include'
-	//   }),
-	// cache: new InMemoryCache()
+
+
 const client = new ApolloClient({
 	link: createHttpLink({
 		uri: 'http://localhost:4000/graphql',
-		credentials: 'include',
+		credentials: 'same-origin',
 	}),
 	cache: new InMemoryCache()
 });
