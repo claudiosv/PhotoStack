@@ -93,6 +93,7 @@ app.use(
   })
 );
 
+<<<<<<< HEAD
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -100,6 +101,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
+=======
+app.use(cors({origin: 'http://localhost:3000', credentials: true}));
+>>>>>>> 230fea037abe12ea799eccd02018986e6e1aeb47
 
 app.get("/image/:imageId", function(req, res, next) {
   res.set("Content-Type", "image/jpeg");
