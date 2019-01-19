@@ -5,7 +5,6 @@ const {
   gql,
   AuthenticationError
 } = require("apollo-server");
-
 const Minio = require("minio");
 
 const minioClient = new Minio.Client({
@@ -19,6 +18,7 @@ const minioClient = new Minio.Client({
 const makeResolvers = models => ({
   Query: {
     getUser(root, {}, request, schema) {
+      console.log('Get user: ' + JSON.stringify(request.session))
       if (request.session.userId) {
         return models.User.findById(request.session.userId);
       } else {
@@ -27,6 +27,7 @@ const makeResolvers = models => ({
     },
 
     getPhotos(root, {}, request, schema) {
+      console.log('Get photos: ' + JSON.stringify(request.session));
       if (request.session.userId) {
         return models.Photo.find(
           { owner: request.session.userId },
@@ -48,13 +49,19 @@ const makeResolvers = models => ({
           return "fail";
         }
       }).then(docs => {
-        if (docs && bcrypt.compareSync(password, docs.password)) {
-          request.session.loggedIn = true;
-          request.session.userId = docs.id;
-          return docs;
-        } else {
-          throw new UserInputError("Wrong username/password");
-        }
+        // DELETE 
+        request.session.loggedIn = true;
+        request.session.userId = "5c41951fce523e001c132a89";
+        console.log('Login user then: '+ JSON.stringify(request.session))
+        return {id: "5c41951fce523e001c132a89", firstName: "Example", lastName:"User", email:"example@gmail.com", password: "12345678"};
+        // UNCOMMENT 
+        //   if (bcrypt.compareSync(password, docs.password)) {
+        //   request.session.loggedIn = true;
+        //   request.session.userId = docs.id;
+        //   return docs;
+        // } else {
+        //   throw new UserInputError("Wrong username/password");
+        // }
       });
     },
 

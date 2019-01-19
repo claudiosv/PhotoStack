@@ -17,36 +17,34 @@ export default class SignInContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: false,
-			psw: false
+			status: false
 		};
 		this.onSignIn = this.onSignIn.bind(this);
 	}
 
-	onSignIn(email, psw) {
+	onSignIn() {
 		this.setState({
-			email,
-			psw
+			status: true
 		});
 	}
 
 	render() {
-		const {email, psw} = this.state;
+		const {status} = this.state;
 		return (
 			<Session>
 				<ApolloConsumer>
-					{client => (
+					{(client) => (
 						<SignIn onSignIn={
 							async (email, password) => {
 								const {error, data} = await client.query({
 									query: LOGIN,
 									variables: {email, password}
 								});
-								console.log(email);
 							}
 						}/>
 					)}
 				</ApolloConsumer>
+				{status && <Redirect to="/"/>}
 			</Session>
 		);
 	}
