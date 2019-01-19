@@ -45,8 +45,8 @@ const schema = gql`
     getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
     getHeaps: [Heap]
-    getHeap(heapID: ID!): Heap
-    getPhoto(photoID: ID!): Photo
+    getHeap(id: ID!): Heap
+    getPhoto(id: ID!): Photo
     isLoggedIn: String
   }
 
@@ -69,8 +69,8 @@ const schema = gql`
       password: String
       firstName: String
       lastName: String
-    ): String
-    createHeap(name: String!, tags: [String]!): String
+    ): User
+    createHeap(name: String!, tags: [String]!): Heap
     logout: String
   }
 

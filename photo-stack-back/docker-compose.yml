@@ -3,8 +3,8 @@ version: "3.7"
 services:
   node:
     build: ./node_server
-    # volumes:
-    #   - ./node_server:/usr/src/photo-stack-back/
+    volumes:
+      - ./node_server/src:/usr/src/photo-stack-back/src
     networks:
       - photostack-back-network
     ports:
