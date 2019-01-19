@@ -21,10 +21,16 @@ export default class SignIn extends React.PureComponent {
 
 	render() {
 		const {email, psw} = this.state;
-		const {onSignIn} = this.props;
+		const {onSignIn, error} = this.props;
 		return (
 			<>
 				<Title>Sign in</Title>
+				{error === '' ? null : 
+				<article class="message is-danger">
+					<div class="message-body">
+						{error}
+					</div>
+				</article>}
 				<Box hasTextAlign="left">
 					<Field>
 						<Label>Email</Label>

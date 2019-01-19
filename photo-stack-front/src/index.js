@@ -38,7 +38,7 @@ ReactDOM.render(
 				<MainLayout path="/"/>
 				<SearchLayout path="search/:query"/>
 				<PhotoLayout path="photo/:photoId"/>
-				<PreferencesLayout path="preferences/:userId"/>
+				<PreferencesLayout path="preferences"/>
 				<HeapLayout path="heap/:heapId"/>
 				<HeapCreateContainer path="createheap"/>
 			</AppContainer>
