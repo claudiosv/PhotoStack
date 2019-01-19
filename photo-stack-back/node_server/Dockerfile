@@ -10,11 +10,13 @@ COPY package.json ./
 COPY . . 
 RUN rm -rf node_modules/
 RUN npm install
-RUN npm install -g nodemon
+# RUN npm install -g 
+RUN npm install pm2 -g
 # If you are building your code for production
 # RUN npm install --only=production
 
 # Bundle app source
 
 
-CMD [ "npm", "start" ]
+# CMD [ "npm", "start" ]
+CMD [ "pm2-runtime", "start", "index.js", "--watch"]

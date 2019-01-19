@@ -69,6 +69,11 @@ const server = new ApolloServer({
     // Or, you can delete the exception information
     // delete error.extensions.exception;
     // return error;
+  },
+  playground: {
+    settings: {
+      "request.credentials": "include"
+    }
   }
 });
 
@@ -82,7 +87,7 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: { secure: false }
   })
 );
 app.get("/image/:imageId", function(req, res, next) {

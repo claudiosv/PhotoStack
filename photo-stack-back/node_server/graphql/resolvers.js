@@ -42,12 +42,7 @@ const makeResolvers = models => ({
 
     loginUser(root, { email, password }, request) {
       const bcrypt = require("bcryptjs");
-      return models.User.findOne({ email: email }, (err, docs) => {
-        if (err || !docs) {
-          console.log(err);
-          return "fail";
-        }
-      }).then(docs => {
+      return models.User.findOne({ email: email }).then(docs => {
         if (docs && bcrypt.compareSync(password, docs.password)) {
           request.session.loggedIn = true;
           request.session.userId = docs.id;
@@ -56,6 +51,14 @@ const makeResolvers = models => ({
           throw new UserInputError("Wrong username/password");
         }
       });
+
+      /*
+      , (err, docs) => {
+        if (err || !docs) {
+          console.log(err);
+          return "fail";
+        }
+      }*/
     },
 
     isLoggedIn(root, {}, req) {
@@ -165,6 +168,9 @@ const makeResolvers = models => ({
   },
   Mutation: {
     createUser(root, args, req) {
+      const bcrypt = require("bcryptjs");
+      var hash = bcrypt.hashSync(args.password, 10);
+      args.password = hash;
       const user = new models.User(args);
       return user.save().then(response => response);
     },
