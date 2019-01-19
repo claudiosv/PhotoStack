@@ -6,7 +6,7 @@ import Mosaic from './Mosaic.jsx';
 
 const GET_PHOTOSET = gql`
 {
-	getPhotosByUser {
+	getPhotos {
 		id
 		objectId
 		height

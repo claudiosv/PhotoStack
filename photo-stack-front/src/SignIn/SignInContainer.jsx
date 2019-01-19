@@ -23,14 +23,12 @@ export default class SignInContainer extends React.Component {
 		this.handleError = this.handleError.bind(this);
 	}
 
-	handleError({error}){
-		console.log('HOI');
+	handleError(error){
 		if (error) {
 			this.setState({
 				error: error.message
 			});
 		}
-		navigate('/');
 	}
 
 	render() {
@@ -41,16 +39,20 @@ export default class SignInContainer extends React.Component {
 				<ApolloConsumer>
 					{client => (
 					<SignIn 
-						onSignIn={ async (email, password) => {
-							console.log('dhjsfhjsd');
-							const {error} = await client.query({
+						onSignIn={
+							async (email, password) => {
+							const {error, data} = await client.query({
 									query: LOGIN,
-									variables: {email, password},
-								});
-							console.log('TIAKANe');
-							this.handleError(error);
-							}}
-						/>)
+									variables: {email, password}
+							});
+							if (data) {
+								console.log('redir ', data);
+								// navigate('/');
+							}else{
+								this.handleError(error);
+							}
+							}
+						}/>)
 						}
 				</ApolloConsumer>
 			</Session>
