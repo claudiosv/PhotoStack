@@ -43,26 +43,23 @@ const makeResolvers = models => ({
 
     loginUser(root, { email, password }, request) {
       const bcrypt = require("bcryptjs");
-      return models.User.findOne({ email: email }, (err, docs) => {
+      return models.User.findOne({ email: email }).then(docs => {
+        if (docs && bcrypt.compareSync(password, docs.password)) {
+          request.session.loggedIn = true;
+          request.session.userId = docs.id;
+          return docs;
+        } else {
+          throw new UserInputError("Wrong username/password");
+        }
+      });
+
+      /*
+      , (err, docs) => {
         if (err || !docs) {
           console.log(err);
           return "fail";
         }
-      }).then(docs => {
-        // DELETE 
-        request.session.loggedIn = true;
-        request.session.userId = "5c41951fce523e001c132a89";
-        console.log('Login user then: '+ JSON.stringify(request.session))
-        return {id: "5c41951fce523e001c132a89", firstName: "Example", lastName:"User", email:"example@gmail.com", password: "12345678"};
-        // UNCOMMENT 
-        //   if (bcrypt.compareSync(password, docs.password)) {
-        //   request.session.loggedIn = true;
-        //   request.session.userId = docs.id;
-        //   return docs;
-        // } else {
-        //   throw new UserInputError("Wrong username/password");
-        // }
-      });
+      }*/
     },
 
     isLoggedIn(root, {}, req) {
@@ -172,6 +169,9 @@ const makeResolvers = models => ({
   },
   Mutation: {
     createUser(root, args, req) {
+      const bcrypt = require("bcryptjs");
+      var hash = bcrypt.hashSync(args.password, 10);
+      args.password = hash;
       const user = new models.User(args);
       return user.save().then(response => response);
     },

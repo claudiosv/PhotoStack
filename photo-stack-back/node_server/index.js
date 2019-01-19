@@ -74,24 +74,26 @@ const server = new ApolloServer({
     // Or, you can delete the exception information
     // delete error.extensions.exception;
     // return error;
+  },
+  playground: {
+    settings: {
+      "request.credentials": "include"
+    }
   }
 });
 
 const app = express();
 app.use(
   session({
-    // store: new RedisStore({
-    //   host: "redis",
-    //   port: 6379
-    // }),
+    store: new RedisStore({
+      host: "redis",
+      port: 6379
+    }),
     name: 'hoi',
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      secure: true
-     }
+    cookie: { secure: false }
   })
 );
 
