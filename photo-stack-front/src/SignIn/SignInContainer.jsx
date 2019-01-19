@@ -1,8 +1,8 @@
 import React from 'react';
-import {navigate} from '@reach/router';
+import {navigate, Redirect} from '@reach/router';
 import Session from '../Session';
 import SignIn from './SignIn.jsx';
-import {ApolloConsumer} from 'react-apollo';
+import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
 import {Help} from 'bloomer';
 
@@ -18,21 +18,32 @@ export default class SignInContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			email: '',
+			password: '',
 			error: ''
 		};
 		this.handleError = this.handleError.bind(this);
 	}
 
-	handleError(error){
+	handleError({error}){
+		console.log('HOI');
 		if (error) {
 			this.setState({
 				error: error.message
 			});
 		}
+		navigate('/');
+	}
+
+	handleSignIn(email, password) {
+		this.setState({
+			email,
+			password
+		})
 	}
 
 	render() {
-		const {error} = this.state;
+		const {error, email, password} = this.state;
 		return (
 			<Session>
 				{error === '' ? null : <Help isColor="danger">{error}</Help>}

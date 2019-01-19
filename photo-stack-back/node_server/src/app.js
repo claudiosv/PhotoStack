@@ -15,7 +15,7 @@ const redis = require("redis");
 const Minio = require("minio");
 const signale = require("signale");
 const multer = require("multer");
-const cors = require('cors')
+const cors = require("cors");
 
 // signale.success("Operation successful");
 // signale.debug("Hello", "from", "L59");
@@ -45,7 +45,7 @@ function connect() {
     )
     .catch(error => {
       console.log(error, "Promise error");
-      //connect();
+      connect();
       // process.exit(1);
     });
 }
@@ -54,7 +54,7 @@ connect();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({req}) => req,
+  context: ({ req }) => req,
   uploads: {
     // Limits here should be stricter than config for surrounding
     // infrastructure such as Nginx so errors can be handled elegantly by
@@ -79,13 +79,14 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(
   session({
     store: new RedisStore({
       host: "redis",
       port: 6379
     }),
-    name: 'hoi',
+    name: "hoi",
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
@@ -93,7 +94,13 @@ app.use(
   })
 );
 
-app.use(cors({origin: 'http://localhost:3000', credentials: true}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
 
 app.get("/image/:imageId", function(req, res, next) {
   res.set("Content-Type", "image/jpeg");
