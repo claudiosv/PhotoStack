@@ -1,11 +1,11 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
 import Session from '../Session';
 import SignUp from './SignUp.jsx';
-import ApolloClient from 'apollo-boost';
+import {Mutation} from 'react-apollo';
 import gql from 'graphql-tag';
+import { navigate } from '@reach/router';
 
-const GET_AUTOCOMPLETE = gql`
+const SIGN_UP = gql`
 mutation ($email: String!, $password: String!, $firstName: String!, $lastName: String!){
 	createUser(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
 		  id
@@ -14,28 +14,15 @@ mutation ($email: String!, $password: String!, $firstName: String!, $lastName: S
 `;
 
 export default class SignUpContainer extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			confirmStatus: false
-		};
-		this.onSignUp = this.onSignUp.bind(this);
-	}
-
-	onSignUp(values) {
-		// On success
-		this.setState({
-			confirmStatus: true
-		});
-		// Do login
-	}
-
 	render() {
-		const {confirmStatus} = this.state;
 		return (
 			<Session>
-				<SignUp onSignUp={this.onSignUp}/>
-				{confirmStatus ? <Redirect to="/"/> : null}
+				<Mutation 
+					mutation={SIGN_UP}
+					onCompleted={() => navigate('/')}
+				>
+				{(performMutation, {error} )=> (<SignUp errorMessage={error} onSignUp={performMutation}/>)}
+				</Mutation>
 			</Session>
 		);
 	}
