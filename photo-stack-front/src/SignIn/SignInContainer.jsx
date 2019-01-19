@@ -1,8 +1,8 @@
 import React from 'react';
-import {navigate, Redirect} from '@reach/router';
+import {navigate} from '@reach/router';
 import Session from '../Session';
 import SignIn from './SignIn.jsx';
-import {Query} from 'react-apollo';
+import {ApolloConsumer} from 'react-apollo';
 import gql from 'graphql-tag';
 import {Help} from 'bloomer';
 
@@ -18,8 +18,6 @@ export default class SignInContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: '',
 			error: ''
 		};
 		this.handleError = this.handleError.bind(this);
@@ -35,33 +33,26 @@ export default class SignInContainer extends React.Component {
 		navigate('/');
 	}
 
-	handleSignIn(email, password) {
-		this.setState({
-			email,
-			password
-		})
-	}
-
 	render() {
-		const {error, email, password} = this.state;
+		const {error} = this.state;
 		return (
 			<Session>
 				{error === '' ? null : <Help isColor="danger">{error}</Help>}
-				<SignIn onSignIn={this.handleSignIn}/>
-				{email && 
-					<Query query={LOGIN} variables={{email, password}}>
-							{({loading, error, data}) => {
-								if (loading) {
-									return null
-								}
-								if (data) {
-									return <Redirect to="/"/>
-								}
-								this.handleError(error);
-								return null;
+				<ApolloConsumer>
+					{client => (
+					<SignIn 
+						onSignIn={ async (email, password) => {
+							console.log('dhjsfhjsd');
+							const {error} = await client.query({
+									query: LOGIN,
+									variables: {email, password},
+								});
+							console.log('TIAKANe');
+							this.handleError(error);
 							}}
-					</Query>
-				}
+						/>)
+						}
+				</ApolloConsumer>
 			</Session>
 		);
 	}
