@@ -5,6 +5,7 @@ import SignIn from './SignIn.jsx';
 import {ApolloConsumer} from 'react-apollo';
 import gql from 'graphql-tag';
 import {Help} from 'bloomer';
+import { createHistory } from '@reach/router/lib/history';
 
 const LOGIN = gql`
   query Login($email: String!, $password: String!) {
@@ -18,35 +19,23 @@ export default class SignInContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: '',
 			error: ''
 		};
 		this.handleError = this.handleError.bind(this);
 	}
 
-	handleError({error}){
-		console.log('HOI');
+	handleError(error){
 		if (error) {
 			this.setState({
 				error: error.message
 			});
 		}
-		navigate('/');
-	}
-
-	handleSignIn(email, password) {
-		this.setState({
-			email,
-			password
-		})
 	}
 
 	render() {
-		const {error, email, password} = this.state;
+		const {error} = this.state;
 		return (
 			<Session>
-				{error === '' ? null : <Help isColor="danger">{error}</Help>}
 				<ApolloConsumer>
 					{client => (
 					<SignIn 
@@ -56,11 +45,10 @@ export default class SignInContainer extends React.Component {
 									query: LOGIN,
 									variables: {email, password}
 							}).then(data => {
-									console.log('redir ', data);
 									navigate('/');
 							}).catch(error => this.handleError(error));
 							}
-						}/>)
+						} error={error}/>)
 						}
 				</ApolloConsumer>
 			</Session>
