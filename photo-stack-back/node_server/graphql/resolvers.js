@@ -114,15 +114,22 @@ const makeResolvers = models => ({
 
     getHeaps(root, {}, request) {
       if (request.session.userId) {
-        return models.Heap.find(
-          { owner: request.session.userId },
-          (err, docs) => {
-            if (err) console.log(err);
-            console.log(docs);
-            return docs;
+        return models.Heap.find({ owner: request.session.userId }).then(
+          response => {
+            return response;
           }
-        ).then(response => {
-          console.log(response);
+        );
+      } else {
+        throw new AuthenticationError("You must be logged in");
+      }
+    },
+
+    getHeap(root, { id }, request) {
+      if (request.session.userId) {
+        return models.Heap.findOne({
+          _id: id,
+          owner: request.session.userId
+        }).then(response => {
           return response;
         });
       } else {
@@ -130,35 +137,12 @@ const makeResolvers = models => ({
       }
     },
 
-    getHeap(root, { id }) {
+    getPhoto(root, { id }, request) {
       if (request.session.userId) {
-        return models.Heap.findOne(
-          { id: id, owner: request.session.userId },
-          (err, docs) => {
-            if (err) console.log(err);
-            console.log(docs);
-            return docs;
-          }
-        ).then(response => {
-          console.log(response);
-          return response;
-        });
-      } else {
-        throw new AuthenticationError("You must be logged in");
-      }
-    },
-
-    getPhoto(root, { id }) {
-      if (request.session.userId) {
-        return models.Photo.findOne(
-          { id: id, owner: request.session.userId },
-          (err, docs) => {
-            if (err) console.log(err);
-            console.log(docs);
-            return docs;
-          }
-        ).then(response => {
-          console.log(response);
+        return models.Photo.findOne({
+          _id: id,
+          owner: request.session.userId
+        }).then(response => {
           return response;
         });
       } else {
@@ -175,21 +159,24 @@ const makeResolvers = models => ({
       return user.save().then(response => response);
     },
     updateUser(root, args, req) {
-      if (request.session.userId) {
+      if (req.session.userId) {
+        const bcrypt = require("bcryptjs");
+        var hash = bcrypt.hashSync(args.password, 10);
+        args.password = hash;
         return models.User.findByIdAndUpdate(req.session.userId, {
           ...args
-        }).then(response => JSON.stringify(response));
+        }).then(response => response);
       } else {
         throw new AuthenticationError("You must be logged in");
       }
     },
     createHeap(root, args, req) {
-      if (request.session.userId) {
+      if (req.session.userId) {
         const heap = new models.Heap({
           ...args,
           owner: req.session.userId
         });
-        return heap.save().then(response => JSON.stringify(response));
+        return heap.save().then(response => response);
       } else {
         throw new AuthenticationError("You must be logged in");
       }
