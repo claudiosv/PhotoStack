@@ -140,7 +140,7 @@ const upload = multer({
   storage: storage
 });
 
-app.post("/upload/", upload.array("photos", 12), async (req, res) => {
+app.post("/upload/", upload.array("photos", 100), async (req, res) => {
   try {
     const redis = require("redis");
     const pub = redis.createClient(6379, "redis");
@@ -164,7 +164,12 @@ app.post("/upload/", upload.array("photos", 12), async (req, res) => {
           if (err) console.log("Error", err, etag);
           signale.log("File uploaded with etag", etag);
           new ExifImage(buffer, function(error, exifData) {
-            if (error) console.log("Exif Error: " + error.message);
+            if (error) {
+              console.log("Exif Error: " + error.message);
+              exifData = { exif: {} };
+              exifData.exif.ExifImageHeight = 0;
+              exifData.exif.ExifImageWidth = 0;
+            }
             let fileObj = {
               owner: req.session.userId,
               metadata: {
