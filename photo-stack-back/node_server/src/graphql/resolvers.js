@@ -180,7 +180,7 @@ const makeResolvers = models => ({
             .then(dataStream => {
               var gm = require("gm");
               var stream = gm(dataStream)
-                .resize("500")
+                .resize("500", "500", "^")
                 .gravity("Center")
                 .crop(500, 500)
                 .noProfile()

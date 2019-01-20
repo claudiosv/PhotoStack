@@ -169,7 +169,7 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
 
             var gm = require("gm");
             var stream = gm(buffer)
-              .resize(null, "500", "^")
+              .resize("500", "500", "^")
               .gravity("Center")
               .crop(500, 500)
               .noProfile()
