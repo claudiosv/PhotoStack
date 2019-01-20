@@ -166,36 +166,51 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
             if (error) {
               console.log("Exif Error: " + error.message);
             }
-            exifData = { exif: {} };
-            var sizeOf = require("image-size");
-            var dimensions = sizeOf(buffer);
-            let fileObj = {
-              owner: req.session.userId,
-              metadata: {
-                ...exifData.exif
-              },
-              uploadTime: moment().unix(),
-              objectId: objectId,
-              height: dimensions.height,
-              width: dimensions.width,
-              // thumbnail: thumbnailName,
-              fileName: originalname,
-              mimeType: mimetype,
-              encoding: encoding
-            };
-            const photo = new Photo(fileObj);
-            photo
-              .save()
-              .then(response => {
-                let data = {
-                  type: "todo",
-                  object_id: objectId,
-                  photo_id: response.id
+
+            var gm = require("gm");
+            var stream = gm(buffer)
+              .resize(null, "500", "^")
+              .gravity("Center")
+              .crop(500, 500)
+              .noProfile()
+              .stream();
+
+            let thumbnailId = uuidv4();
+            return minioClient
+              .putObject("photostack", thumbnailId, stream, metaData)
+              .then(etag => {
+                exifData = { exif: {} };
+                var sizeOf = require("image-size");
+                var dimensions = sizeOf(buffer);
+
+                let fileObj = {
+                  owner: req.session.userId,
+                  metadata: {
+                    ...exifData.exif
+                  },
+                  uploadTime: moment().unix(),
+                  objectId: objectId,
+                  height: dimensions.height,
+                  width: dimensions.width,
+                  thumbnail: thumbnailId,
+                  fileName: originalname,
+                  mimeType: mimetype,
+                  encoding: encoding
                 };
-                pub.publish("objdetection", JSON.stringify(data));
-                console.log("Photo saved", response);
-              })
-              .catch(x => signale.error("Tiakane", x));
+                const photo = new Photo(fileObj);
+                photo
+                  .save()
+                  .then(response => {
+                    let data = {
+                      type: "todo",
+                      object_id: objectId,
+                      photo_id: response.id
+                    };
+                    pub.publish("objdetection", JSON.stringify(data));
+                    console.log("Photo saved", response);
+                  })
+                  .catch(x => signale.error("Tiakane", x));
+              });
           });
         }
       );

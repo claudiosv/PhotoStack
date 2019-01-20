@@ -169,7 +169,7 @@ const makeResolvers = models => ({
         throw new AuthenticationError("You must be logged in");
       }
     },
-    createHeap(root, { name, tags }, req) {
+    async createHeap(root, { name, tags }, req) {
       if (req.session.userId) {
         return models.Photo.findOne({
           owner: req.session.userId,
@@ -219,6 +219,3 @@ const makeResolvers = models => ({
 });
 
 module.exports = makeResolvers;
-
-/*
- */
