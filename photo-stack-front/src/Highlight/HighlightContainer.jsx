@@ -31,8 +31,7 @@ export default class HighlightContainer extends React.Component {
             return (
               <article class="message is-info">
                 <div class="message-body">
-                  You need to upload at least 5 photos to get your highlights
-                  beeing shown
+                  You need to upload at least 5 photos to get this feature
                 </div>
               </article>
             );
