@@ -161,12 +161,7 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
         metaData,
         (err, etag) => {
           if (err) console.log("Error", err, etag);
-          signale.log("File uploaded with etag", etag);
           new ExifImage(buffer, function(error, exifData) {
-            if (error) {
-              console.log("Exif Error: " + error.message);
-            }
-
             var gm = require("gm");
             var stream = gm(buffer)
               .resize("500", "500", "^")

@@ -42,7 +42,9 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[0].thumbnail
+                      document.location.origin +
+                      "/image/" +
+                      highlightIds[0].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -55,7 +57,9 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[1].thumbnail
+                      document.location.origin +
+                      "/image/" +
+                      highlightIds[1].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -66,7 +70,9 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[2].thumbnail
+                      document.location.origin +
+                      "/image/" +
+                      highlightIds[2].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -79,7 +85,9 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[3].thumbnail
+                      document.location.origin +
+                      "/image/" +
+                      highlightIds[3].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -90,11 +98,13 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[4].thumbnail
+                      document.location.origin +
+                      "/image/" +
+                      highlightIds[4].thumbnail
                     }
                     render={props => (
                       <Box>
-                        <Image  src={props.url} />
+                        <Image src={props.url} />
                       </Box>
                     )}
                   />

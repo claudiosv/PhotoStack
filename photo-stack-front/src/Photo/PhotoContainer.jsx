@@ -1,14 +1,14 @@
 import React from "react";
 import Photo from "./Photo.jsx";
-import {Query} from 'react-apollo';
-import gql from 'graphql-tag';
-import {Redirect} from '@reach/router';
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+import { Redirect } from "@reach/router";
 
 import "../stylesheets/photo.scss";
 
 const GET_PHOTO = gql`
-  query getPhoto($id: ID!){
-    getPhoto(id: $id){
+  query getPhoto($id: ID!) {
+    getPhoto(id: $id) {
       objectId
       thumbnail
     }
@@ -16,17 +16,23 @@ const GET_PHOTO = gql`
 `;
 
 export default class PhotoContainer extends React.Component {
-
   render() {
-    const { isOpen, onClose, photoId} = this.props;
+    const { isOpen, onClose, photoId } = this.props;
     return (
-      <Query query={GET_PHOTO} variables={{id: photoId}}>
+      <Query query={GET_PHOTO} variables={{ id: photoId }}>
         {({ loading, error, data }) => {
           if (loading) {
             return "Loading...";
           }
           if (data) {
-            const display = [ {original: 'http://localhost:3000/image/' + data.getPhoto.objectId, thumbnail: 'http://localhost:3000/image/' + data.getPhoto.thumbnail}];
+            const display = [
+              {
+                original:
+                  document.location.origin + "/image/" + data.getPhoto.objectId,
+                thumbnail:
+                  document.location.origin + "/image/" + data.getPhoto.thumbnail
+              }
+            ];
             return (
               <Photo isOpen={isOpen} photoList={display} onClose={onClose} />
             );

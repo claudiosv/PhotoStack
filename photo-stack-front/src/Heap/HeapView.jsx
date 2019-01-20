@@ -60,7 +60,10 @@ export default class HeapView extends React.Component {
                               const r = gcd(width, height);
                               return {
                                 key: id,
-                                src: "http://localhost:3000/image/" + objectId,
+                                src:
+                                  document.location.origin +
+                                  "/image/" +
+                                  objectId,
                                 width: width / r,
                                 height: height / r
                               };
