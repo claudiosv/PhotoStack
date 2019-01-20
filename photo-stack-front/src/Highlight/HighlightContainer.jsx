@@ -8,7 +8,7 @@ import gql from "graphql-tag";
 const GET_HIGHLIGHTS = gql`
   {
     getHighlights {
-      objectId
+      thumbnail
     }
   }
 `;
@@ -43,7 +43,7 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[0].objectId
+                      "http://localhost:3000/image/" + highlightIds[0].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -56,7 +56,7 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[1].objectId
+                      "http://localhost:3000/image/" + highlightIds[1].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -67,7 +67,7 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[2].objectId
+                      "http://localhost:3000/image/" + highlightIds[2].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -80,7 +80,7 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[3].objectId
+                      "http://localhost:3000/image/" + highlightIds[3].thumbnail
                     }
                     render={props => (
                       <Box>
@@ -91,7 +91,7 @@ export default class HighlightContainer extends React.Component {
                   <Tile
                     isChild
                     url={
-                      "http://localhost:3000/image/" + highlightIds[4].objectId
+                      "http://localhost:3000/image/" + highlightIds[4].thumbnail
                     }
                     render={props => (
                       <Box>

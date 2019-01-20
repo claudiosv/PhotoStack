@@ -10,8 +10,9 @@ const GET_HEAPS = gql`
   {
     getHeaps {
       id
-	  name
-	  tags
+      name
+      tags
+      thumbnail
     }
   }
 `;
@@ -38,28 +39,14 @@ export default class HeapContainer extends React.Component {
               return null;
             }
             return data.getHeaps.map(heap => {
-				console.log(heap.tags);
               return (
-                <Query query={GET_HEAP_PHOTOS} variables={{query: heap.tags}}>
-                  {({ loading, data, error }) => {
-					  if (loading) {
-						  return 'loading...';
-					  }
-                    if (data) {
-						const {searchPhotos} = data;
-						console.log(data);
-                      return (
-                        <Column key={heap.id} isSize="1/4">
-                          <Heap
-                            id={heap.id}
-                            thumbnail={searchPhotos[0].objectId}
-                            name={heap.name}
-                          />
-                        </Column>
-                      );
-                    }
-                  }}
-                </Query>
+                <Column key={heap.id} isSize="1/4">
+                  <Heap
+                    id={heap.id}
+                    thumbnail={heap.thumbnail}
+                    name={heap.name}
+                  />
+                </Column>
               );
             });
           }}
