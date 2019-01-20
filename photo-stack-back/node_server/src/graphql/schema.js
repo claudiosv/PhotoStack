@@ -42,7 +42,7 @@ const schema = gql`
     getPhotos: [Photo]
     getUser: User
     loginUser(email: String!, password: String!): User
-    searchPhotos(query: [String!]!, conjuctive: Boolean): [Photo]
+    searchPhotos(query: [String!]!, conjunctive: Boolean): [Photo]
     getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
     getHeaps: [Heap]
