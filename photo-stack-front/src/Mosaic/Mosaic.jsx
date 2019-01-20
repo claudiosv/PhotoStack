@@ -12,6 +12,7 @@ export default class Mosaic extends React.PureComponent {
 				<Title isSize={4}>{title}</Title>
 				<Gallery
 					photos={photoSet}
+					columns={4}
 					onClick={(e, {photo}) => {
 						navigate('photo/' + photo.key);
 					}}/>
