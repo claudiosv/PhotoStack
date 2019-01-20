@@ -8,7 +8,7 @@ import Mosaic from "../Mosaic/Mosaic.jsx";
 
 const GET_HEAP_PHOTOS = gql`
   query GetHeapPhotos($query: [String!]!) {
-    searchPhotos(query: $query, conjuctive: false) {
+    searchPhotos(query: $query, conjunctive: false) {
       id
       objectId
       height
