@@ -13,6 +13,7 @@ const schema = gql`
     owner: ID!
     name: String!
     tags: [String]!
+    thumbnail: String!
   }
 
   type Metadata {

@@ -169,13 +169,43 @@ const makeResolvers = models => ({
         throw new AuthenticationError("You must be logged in");
       }
     },
-    createHeap(root, args, req) {
+    createHeap(root, { name, tags }, req) {
       if (req.session.userId) {
-        const heap = new models.Heap({
-          ...args,
-          owner: req.session.userId
+        return models.Photo.findOne({
+          owner: req.session.userId,
+          tags: { $in: tags }
+        }).then(photo => {
+          return minioClient
+            .getObject("photostack", photo.objectId)
+            .then(dataStream => {
+              var gm = require("gm");
+              var stream = gm(dataStream)
+                .resize("500")
+                .gravity("Center")
+                .crop(500, 500)
+                .noProfile()
+                .stream();
+
+              const uuidv4 = require("uuid/v4");
+              let thumbnailName = uuidv4();
+              let metaData = {
+                "Content-Type": photo.mimeType,
+                Filename: photo.fileName
+              };
+              return minioClient
+                .putObject("photostack", thumbnailName, stream, metaData)
+                .then(etag => {
+                  const heap = new models.Heap({
+                    name: name,
+                    tags: tags,
+                    owner: req.session.userId,
+                    thumbnail: thumbnailName
+                  });
+                  console.log("Saving heap to DB");
+                  return heap.save();
+                });
+            });
         });
-        return heap.save().then(response => response);
       } else {
         throw new AuthenticationError("You must be logged in");
       }
@@ -190,39 +220,5 @@ const makeResolvers = models => ({
 
 module.exports = makeResolvers;
 
-/*var gm = require("gm");
-      var width = 0,
-        height = 0;
-      // obtain the size of an image
-      let thumbnailStream = gm(stream)
-        .size({ bufferStream: true }, function(err, size) {
-          if (!err) {
-            width = size.width;
-            height = size.height;
-            console.log("width = " + size.width);
-            console.log("height = " + size.height);
-          }
-        })
-        .resize(500, 500 + ">")
-        .gravity("Center")
-        .extent(500, 500)
-        .stream("jpg");
-      let metaData = {
-        "Content-Type": mimetype,
-        Filename: filename
-      };
-      let thumbnailName = uuidv4();
-      minioClient.putObject(
-        "photostack",
-        thumbnailName,
-        thumbnailStream,
-        metaData,
-        (err, etag) => {
-          return console.log(err, etag); // err should be null
-        }
-      );
-
-      .write(outputPath, function (error) {
-        if (error) console.log('Error - ', error);
-      });
-      */
+/*
+ */
