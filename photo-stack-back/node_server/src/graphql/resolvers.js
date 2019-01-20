@@ -70,7 +70,7 @@ const makeResolvers = models => ({
     searchPhotos(root, { query }, request) {
       if (request.session.userId) {
         return models.Photo.find(
-          { owner: request.session.userId, tags: query },
+          { owner: request.session.userId, tags: { $in: query } },
           (err, docs) => {
             if (err) console.log(err);
             return docs;
