@@ -171,7 +171,7 @@ const FormikAdapter = withFormik({
 	validationSchema: SignupSchema,
 
 	handleSubmit: (values, {props}) => {
-		props.onSignUp(values);
+		props.onSignUp({variables: values});
 	},
 
 	displayName: 'SignUpForm'
