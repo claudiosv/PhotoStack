@@ -1,11 +1,9 @@
 import React from 'react';
-import {navigate, Redirect} from '@reach/router';
+import {navigate} from '@reach/router';
 import Session from '../Session';
 import SignIn from './SignIn.jsx';
 import {ApolloConsumer} from 'react-apollo';
 import gql from 'graphql-tag';
-import {Help} from 'bloomer';
-import { createHistory } from '@reach/router/lib/history';
 
 const LOGIN = gql`
   query Login($email: String!, $password: String!) {
