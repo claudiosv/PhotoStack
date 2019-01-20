@@ -10,6 +10,7 @@ const GET_PHOTO = gql`
   query getPhoto($id: ID!){
     getPhoto(id: $id){
       objectId
+      thumbnail
     }
   }
 `;
@@ -25,7 +26,7 @@ export default class PhotoContainer extends React.Component {
             return "Loading...";
           }
           if (data) {
-            const display = [ {original: 'http://localhost:3000/image/' + data.getPhoto.objectId}];
+            const display = [ {original: 'http://localhost:3000/image/' + data.getPhoto.objectId, thumbnail: 'http://localhost:3000/image/' + data.getPhoto.thumbnail}];
             return (
               <Photo isOpen={isOpen} photoList={display} onClose={onClose} />
             );
