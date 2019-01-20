@@ -22,7 +22,7 @@ const GET_ALL_PHOTOS = gql`
 
 const SEARCH_PHOTOS = gql`
   query search($query: [String!]!) {
-    searchPhotos(query: $query, conjuctive: true) {
+    searchPhotos(query: $query, conjunctive: true) {
       id
       objectId
       height
