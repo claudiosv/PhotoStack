@@ -8,14 +8,14 @@ export default class Mosaic extends React.PureComponent {
 	render() {
 		const {title, photoSet} = this.props;
 		return (
-			<>
+			<div className="mosaic">
 				<Title isSize={4}>{title}</Title>
 				<Gallery
 					photos={photoSet}
 					onClick={(e, {photo}) => {
 						navigate('photo/' + photo.key);
 					}}/>
-			</>
+			</div>
 		);
 	}
 }

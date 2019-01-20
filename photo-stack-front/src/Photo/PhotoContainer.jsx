@@ -1,31 +1,39 @@
-import React from 'react';
-import Photo from './Photo.jsx';
+import React from "react";
+import Photo from "./Photo.jsx";
+import {Query} from 'react-apollo';
+import gql from 'graphql-tag';
+import {Redirect} from '@reach/router';
 
-import '../stylesheets/photo.scss';
+import "../stylesheets/photo.scss";
+
+const GET_PHOTO = gql`
+  query getPhoto($id: ID!){
+    getPhoto(id: $id){
+      objectId
+    }
+  }
+`;
 
 export default class PhotoContainer extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			photoList:  [
-				{
-					original: 'https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=599',
-					thumbnail: 'https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=80&h=59'
-				}
-			]
-		};
-	}
-
-	// componentDidMount() {
-	// 	const {photoId} = this.props;
-	// 	// Retrive all detivatives 
-	// }
-
-	render(){
-		const {isOpen, onClose} = this.props;
-		const {photoList} = this.state;
-
-		return <Photo isOpen={isOpen} photoList={photoList} onClose={onClose}/>;
-	}
+  render() {
+    const { isOpen, onClose, photoId} = this.props;
+    return (
+      <Query query={GET_PHOTO} variables={{id: photoId}}>
+        {({ loading, error, data }) => {
+          if (loading) {
+            return "Loading...";
+          }
+          if (data) {
+            const display = [ {original: 'http://localhost:3000/image/' + data.getPhoto.objectId}];
+            return (
+              <Photo isOpen={isOpen} photoList={display} onClose={onClose} />
+            );
+          }
+          console.log(JSON.stringify(error));
+          return <Redirect to="/" />;
+        }}
+      </Query>
+    );
+  }
 }

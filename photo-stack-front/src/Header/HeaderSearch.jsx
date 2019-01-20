@@ -27,9 +27,9 @@ export default class HeaderSearch extends React.PureComponent {
 	handleChange(value) {
 		this.setState({value});
 		if (value.length === 0) {
-			navigate('/');
-		}else {
-			navigate('/search/'+ value.map(v => v.value).join('&'))
+			this.props.onEmpty()
+		}else{
+			this.props.onEnter(value)
 		}
 	}
 
