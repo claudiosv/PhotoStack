@@ -69,9 +69,11 @@ const makeResolvers = models => ({
 
     searchPhotos(root, { query, conjunctive }, request) {
       if (request.session.userId) {
-        var queryTags = { $in: query };
-        if (conjunctive === true) {
+        var queryTags;
+        if (conjunctive) {
           queryTags = { $all: query };
+        } else {
+          queryTags = { $in: query };
         }
         return models.Photo.find(
           { owner: request.session.userId, tags: queryTags },
