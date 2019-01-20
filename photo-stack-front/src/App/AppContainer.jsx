@@ -3,7 +3,7 @@ import FileDrop from 'react-file-drop';
 import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
 import Header from '../Header';
-import {Redirect} from '@reach/router';
+import {Redirect, Match} from '@reach/router';
 
 const GET_USER = gql`
   query getUser {
@@ -71,12 +71,6 @@ export default class AppContainer extends React.Component {
 							}}
 						</Query>
 						{this.props.children}
-						{/*
-						<PhotoContainer
-							isOpen={selectedPhotoIsOpen}
-							photoId={selectedPhotoId}
-							onClose={this.handlePhotoClose}
-						/> */}
 					</FileDrop>
 				);}
 }

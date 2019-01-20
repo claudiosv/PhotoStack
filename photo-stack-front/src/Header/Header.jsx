@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Image, Navbar, NavbarBrand, NavbarItem, NavbarEnd, NavbarMenu, NavbarDropdown, NavbarLink, NavbarBurger, NavbarStart, Field, Control, Title} from 'bloomer';
 import logo from '../logo.svg';
 import HeaderSearch from './HeaderSearch.jsx';
+import {navigate} from '@reach/router';
 import '../stylesheets/header.scss';
 
 export default class Header extends React.Component {
@@ -31,7 +32,9 @@ export default class Header extends React.Component {
 		const search = (
 			<Field>
 				<Control>
-					<HeaderSearch onSearch={onSearch}/>
+					<HeaderSearch onEnter={value => 
+						navigate('/search/'+ value.map(v => v.value).join('&'))
+					} onEmpty={() => navigate('/')}/>
 				</Control>
 			</Field>
 		);
@@ -66,7 +69,7 @@ export default class Header extends React.Component {
 					<NavbarEnd>
 						{{
 							empty: null,
-							title: <NavbarItem href="/">Go Back</NavbarItem>,
+							title: <NavbarItem href="javascript:window.history.back()">Go Back</NavbarItem>,
 							search: menu
 						}[type]}
 					</NavbarEnd>

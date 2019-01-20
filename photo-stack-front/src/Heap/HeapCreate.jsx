@@ -16,7 +16,7 @@ class HeapCreate extends React.PureComponent {
 		//Needed to adapt the custom selector
 		this.props.handleChange({
 			target: {
-				name: 'heapTags',
+				name: 'tags',
 				value: values
 			}
 		});
@@ -41,25 +41,25 @@ class HeapCreate extends React.PureComponent {
 							<Control>
 								<Input
 									isSize="medium"
-									isColor={errors.heapName && touched.heapName ? 'danger' : ''}
-									name="heapName"
+									isColor={errors.name && touched.name ? 'danger' : ''}
+									name="name"
 									type="text"
 									placeholder="The heap name..."
-									value={values.heapName}
+									value={values.name}
 									onChange={handleChange}
 									onBlur={handleBlur}
 								/>
-								{errors.heapName && touched.heapName ? (
-									<Help isColor="danger">{errors.heapName}</Help>
+								{errors.name && touched.name ? (
+									<Help isColor="danger">{errors.name}</Help>
 								) : null}
 							</Control>
 						</Field>
 						<Field>
 							<Label>Heap tags</Label>
 							<Control>
-								<HeaderSearch name="heapTags" onSearch={this.onTagInsert}/>
-								{errors.heapTags && touched.heapTags ? (
-									<Help isColor="danger">{errors.heapTags}</Help>
+								<HeaderSearch name="tags" onEnter={this.onTagInsert} onEmpty={() => {}}/>
+								{errors.tags && touched.tags ? (
+									<Help isColor="danger">{errors.tags}</Help>
 								) : null}
 							</Control>
 						</Field>
@@ -74,24 +74,25 @@ class HeapCreate extends React.PureComponent {
 }
 
 const HeapSchema = Yup.object().shape({
-	heapName: Yup.string()
+	name: Yup.string()
 		.min(2, 'How could it be so short ;)')
 		.max(50, 'Too long man!')
 		.required('Mmmm... seems we\'ve got an empty field'),
-	heapTags: Yup.array()
+	tags: Yup.array()
 		.min(1, 'There must be at least one tag!')
 });
 
 const FormikAdapter = withFormik({
 	mapPropsToValues: () => ({
-		heapName: '',
-		heapTags: []
+		name: '',
+		tags: []
 	}),
 
 	validationSchema: HeapSchema,
 
-	handleSubmit: (values, {props}) => {
-		props.onHeapCreate(values);
+	handleSubmit: ({name, tags}, {props}) => {
+		console.log({name, tags: tags.map(({value}) => value)});
+		props.onHeapCreate({variables: {name, tags: tags.map(({value}) => value)}});
 	},
 
 	displayName: 'HeapCreate'

@@ -1,58 +1,81 @@
-import React from 'react';
-import Header from '../Header';
-import Gallery from 'react-photo-gallery';
+import React from "react";
+import Header from "../Header";
+import Gallery from "react-photo-gallery";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+import Page from "../Page";
+import Mosaic from "../Mosaic/Mosaic.jsx";
 
+const GET_HEAP_PHOTOS = gql`
+  query GetHeapPhotos($query: [String!]!) {
+    searchPhotos(query: $query) {
+      id
+      objectId
+      height
+      width
+    }
+  }
+`;
 
-const userPhotos = [
-	{
-		src: 'https://images.unsplash.com/photo-1452697620382-f6543ead73b5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=599',
-		width: 4,
-		height: 3,
-		key: 'minioID'
-	},
-	{
-		src: 'https://source.unsplash.com/Dm-qxdynoEc/800x799',
-		width: 1,
-		height: 1
-	},
-	{
-		src: 'https://images.unsplash.com/photo-1524293568345-75d62c3664f7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&h=800',
-		width: 3,
-		height: 4
-	},
-	{
-		src: 'https://images.unsplash.com/photo-1515688403147-44e0433f180f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&h=799',
-		width: 3,
-		height: 4
-	},
-	{
-		src: 'https://source.unsplash.com/epcsn8Ed8kY/600x799',
-		width: 3,
-		height: 4
-	},
-	{
-		src: 'https://source.unsplash.com/PpOHJezOalU/800x599',
-		width: 4,
-		height: 3
-	},
-	
-];
+const GET_HEAP = gql`
+  query GetHeap($id: ID!) {
+    getHeap(id: $id) {
+      name
+      tags
+    }
+  }
+`;
+
+const gcd = (a, b) => {
+  return b === 0 ? a : gcd(b, a % b);
+};
 
 export default class HeapView extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			confirmStatus: false
-		};
-	}
-
-	render() {
-		const {confirmStatus, onSelectPhoto} = this.state;
-		const {history,match, location, heapName} = this.props;
-		return (<>
-			<Header type="title" titleText={match.url.substr(1)}/>
-			<Gallery photos={userPhotos} onClick={onSelectPhoto}/>
-			</>
-		);
-	}
+  render() {
+    return (
+      <Query query={GET_HEAP} variables={{ id: this.props.heapId }}>
+        {({ loading, error, data }) => {
+          if (loading) {
+            return "Loading..";
+          }
+          if (data) {
+            const heap = data.getHeap;
+            console.log(heap);
+            return (
+              <>
+                <Header type="title" titleText={heap.name} />
+                <Query query={GET_HEAP_PHOTOS} variables={{ query: heap.tags }}>
+                  {({ loading, error, data }) => {
+                    if (loading) {
+                      return "Loading..";
+                    }
+                    if (data) {
+                      const { searchPhotos } = data;
+                      return (
+                        <Mosaic
+                          title=""
+                          photoSet={searchPhotos.map(
+                            ({ id, objectId, height, width }) => {
+                              console.log(width, height);
+                              const r = gcd(width, height);
+                              return {
+                                key: id,
+                                src: "http://localhost:3000/image/" + objectId,
+                                width: width / r,
+                                height: height / r
+                              };
+                            }
+                          )}
+                        />
+                      );
+                    }
+                  }}
+                </Query>
+              </>
+            );
+          }
+        }}
+      </Query>
+    );
+  }
 }

@@ -17,10 +17,11 @@ import SignInContainer from './SignIn';
 import SignOutContainer from './SignOut';
 import SearchLayout from './Layout/SearchLayout.jsx';
 import MainLayout from './Layout/MainLayout.jsx';
-import PhotoLayout from './Layout/PhotoLayout.jsx';
-import PreferencesLayout from './Layout/PreferencesLayout.jsx';
 import HeapLayout from './Layout/HeapLayout.jsx';
 import HeapCreateContainer from './Heap/HeapCreateContainer.jsx'; // INSPECT NASTY HERE!!
+import PreferencesLayout from './Layout/PreferencesLayout';
+import HeapView from './Heap/HeapView';
+import PreferencesContainer from './Preferences/PreferencesContainer';
 
 
 const client = new ApolloClient({
@@ -35,13 +36,12 @@ ReactDOM.render(
 	<ApolloProvider client={client}>
 		<Router>
 			<AppContainer path="/">
-				<MainLayout path="/"/>
-				<SearchLayout path="search/:query"/>
-				<PhotoLayout path="photo/:photoId"/>
-				<PreferencesLayout path="preferences"/>
-				<HeapLayout path="heap/:heapId"/>
-				<HeapCreateContainer path="createheap"/>
+				<MainLayout path="/*"/>
+				<SearchLayout path="search/*"/>
 			</AppContainer>
+			<PreferencesContainer path="/preferences"/>
+			<HeapLayout path="/heap/*"/>
+			<HeapCreateContainer path="/createheap"/>
 			<SignUpContainer path="/signup"/>
 			<SignInContainer path="/signin"/>
 			<SignOutContainer path="/signout"/>

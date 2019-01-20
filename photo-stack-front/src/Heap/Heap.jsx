@@ -8,7 +8,6 @@ import '../stylesheets/heap.scss';
 export default class Heap extends React.PureComponent {
 	render() {
 		const {name, thumbnail, id, noLink} = this.props;
-		console.log(id);
 		return (
 			<>
 				{noLink ? (
@@ -19,7 +18,7 @@ export default class Heap extends React.PureComponent {
 				) : (
 					<Link to={'heap/' + id}>
 						<Box>
-							<Image isRatio="square" src={thumbnail}/>
+							<Image isRatio="square" src={'http://localhost:3000/image/' + thumbnail}/>
 							<Title isSize="5">{name}</Title>
 						</Box>
 					</Link>

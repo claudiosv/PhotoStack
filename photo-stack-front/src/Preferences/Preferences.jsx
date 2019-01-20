@@ -6,17 +6,8 @@ import * as Yup from 'yup';
 import ApolloClient from 'apollo-boost';
 import gql from 'graphql-tag';
 
-const GET_DETAILS = gql`
-{
-  getUser{
-	  firstName
-  }
-}
-`;
-
 class Preferences extends React.PureComponent {
 	render() {
-		const {isOpen, onClose} = this.props;
 		const {
 			values,
 			touched,
@@ -26,12 +17,9 @@ class Preferences extends React.PureComponent {
 			handleSubmit
 		} = this.props;
 		return (
-			<Modal isActive={isOpen}>
-				<ModalBackground onClick={onClose}/>
-				<ModalContent>
 					<Box hasTextAlign="centered">
 						<Content>
-							<Column isOffset={2} isSize={8}>
+							<Column isOffset={1} isSize={10}>
 								<Field>
 									<Label>First name</Label>
 									<Control>
@@ -130,9 +118,6 @@ class Preferences extends React.PureComponent {
 							</Column>
 						</Content>
 					</Box>
-				</ModalContent>
-				<ModalClose isSize="large" onClick={onClose}/>
-			</Modal>
 		);
 	}
 }
@@ -152,24 +137,17 @@ const PreferencesSchema = Yup.object().shape({
 	password: Yup.string()
 		.min(8, 'How could it be so short ;)')
 		.max(20, 'Too long man!')
-		.required('Mmmm... seems we\'ve got an empty field'),
+		.required('In order to save changes you have to insert the psw'),
 	passwordConfirmation: Yup.string()
 		.oneOf([Yup.ref('password'), null], 'It does not match your password')
 		.required('Mmmm... seems we\'ve got an empty field')
 });
 
-async function dbValues(){ 
-	const {data} = await client.query({
-		query: GET_DETAILS,
-	});
-	return data.getUser;
-}
-
 const FormikAdapter = withFormik({
-	mapPropsToValues: () => ({
-		firstName: '',
-		lastName: '',
-		email: '',
+	mapPropsToValues: (props) => ({
+		firstName: props.initialData.firstName,
+		lastName: props.initialData.lastName,
+		email: props.initialData.email,
 		password: '',
 		passwordConfirmation: ''
 	}),
@@ -177,7 +155,7 @@ const FormikAdapter = withFormik({
 	validationSchema: PreferencesSchema,
 
 	handleSubmit: (values, {props}) => {
-		props.onSignUp(values);
+		props.onSave({variables: values});
 	},
 
 	displayName: 'Preferences'
