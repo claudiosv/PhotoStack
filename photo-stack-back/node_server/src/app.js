@@ -117,7 +117,6 @@ app.get("/image/:imageId", function(req, res, next) {
       res.write(chunk);
     });
     dataStream.on("end", function() {
-      console.log("End. Total size = " + size);
       res.end();
     });
     dataStream.on("error", function(err) {
