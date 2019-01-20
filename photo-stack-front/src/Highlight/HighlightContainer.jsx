@@ -47,7 +47,7 @@ export default class HighlightContainer extends React.Component {
                     }
                     render={props => (
                       <Box>
-                        <Image isRatio="square" src={props.url} />
+                        <Image src={props.url} />
                       </Box>
                     )}
                   />
@@ -60,7 +60,7 @@ export default class HighlightContainer extends React.Component {
                     }
                     render={props => (
                       <Box>
-                        <Image isRatio="square" src={props.url} />
+                        <Image src={props.url} />
                       </Box>
                     )}
                   />
@@ -84,7 +84,7 @@ export default class HighlightContainer extends React.Component {
                     }
                     render={props => (
                       <Box>
-                        <Image isRatio="square" src={props.url} />
+                        <Image src={props.url} />
                       </Box>
                     )}
                   />
@@ -95,7 +95,7 @@ export default class HighlightContainer extends React.Component {
                     }
                     render={props => (
                       <Box>
-                        <Image isRatio="square" src={props.url} />
+                        <Image  src={props.url} />
                       </Box>
                     )}
                   />
