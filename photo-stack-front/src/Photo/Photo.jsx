@@ -9,9 +9,7 @@ export default class Photo extends React.PureComponent {
 			<Modal isActive={isOpen}>
 				<ModalBackground onClick={onClose}/>
 				<ModalContent>
-					<Box>
 						<ImageGallery items={photoList} showPlayButton={false} showFullscreenButton={false} infinite={false}/>
-					</Box>
 				</ModalContent>
 				<ModalClose isSize="large" onClick={onClose}/>
 			</Modal>
