@@ -1,9 +1,9 @@
-import React from 'react';
-import FileDrop from 'react-file-drop';
-import {Query} from 'react-apollo';
-import gql from 'graphql-tag';
-import Header from '../Header';
-import {Redirect, navigate} from '@reach/router';
+import React from "react";
+import FileDrop from "react-file-drop";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+import Header from "../Header";
+import { Redirect, Match } from "@reach/router";
 
 const GET_USER = gql`
   query getUser {
@@ -20,7 +20,7 @@ export default class AppContainer extends React.Component {
     for (let i = 0; i < fileList.length; i++)
       data.append("photos", fileList[i]);
 
-    fetch("http://localhost:3000/upload", {
+    fetch(document.location.origin + "/upload", {
       mode: "no-cors",
       method: "POST",
       // headers: {
@@ -32,10 +32,12 @@ export default class AppContainer extends React.Component {
     }).then(
       function(res) {
         if (res.ok) {
-          alert("Perfect! ");
-          navigate('/');
+          alert(
+            "Upload successful. Please allow time for the image to be processed before it can be searched. Dismiss alert to refresh page."
+          );
+          window.location.reload();
         } else if (res.status == 401) {
-          alert("Oops! ");
+          alert("Oops! There was an error with the upload. Please try again.");
         }
       },
       function(e) {
@@ -44,34 +46,31 @@ export default class AppContainer extends React.Component {
     );
   };
 
- 
-	render() {
-		return (
-					<FileDrop
-						onDrop={this.uploadAction}
-					>
-						<Query query={GET_USER}>
-							{({loading, error, data}) => {
-								if (loading) {
-									return 'Loading...';
-								}
-								if (data) {
-                  console.log(data);
-									return (
-                    <Header
-                      type="search"
-                      userName={data.getUser.firstName}
-                      onSearch={this.handleSearch}
-                      onPreferences={this.togglePreferences}
-                    />
-                  );
-                }
-                console.log(JSON.stringify(error));
-                return <Redirect to="/signin"/>
-								
-							}}
-						</Query>
-						{this.props.children}
-					</FileDrop>
-				);}
+  render() {
+    return (
+      <FileDrop onDrop={this.uploadAction}>
+        <Query query={GET_USER}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return "Loading...";
+            }
+            if (data) {
+              console.log(data);
+              return (
+                <Header
+                  type="search"
+                  userName={data.getUser.firstName}
+                  onSearch={this.handleSearch}
+                  onPreferences={this.togglePreferences}
+                />
+              );
+            }
+            console.log(JSON.stringify(error));
+            return <Redirect to="/signin" />;
+          }}
+        </Query>
+        {this.props.children}
+      </FileDrop>
+    );
+  }
 }

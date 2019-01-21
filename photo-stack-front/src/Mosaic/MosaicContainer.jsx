@@ -7,7 +7,7 @@ import Mosaic from "./Mosaic.jsx";
 import { Router, navigate } from "@reach/router";
 import PhotoContainer from "../Photo";
 
-import '../stylesheets/mosaic.scss';
+import "../stylesheets/mosaic.scss";
 
 const GET_ALL_PHOTOS = gql`
   {
@@ -38,11 +38,11 @@ const gcd = (a, b) => {
 export default class MosaicContainer extends React.Component {
   render() {
     const { query, isSearch } = this.props;
-	const query_string = query.replace(new RegExp('&', 'g'), ' ');
-	const query_array = query.split('&');
+    const query_string = query.replace(new RegExp("&", "g"), " ");
+    const query_array = query.split("&");
     const title =
       query_string === "" ? "All" : 'Looking for "' + query_string + '"';
-	const gql_query = isSearch ? SEARCH_PHOTOS : GET_ALL_PHOTOS;
+    const gql_query = isSearch ? SEARCH_PHOTOS : GET_ALL_PHOTOS;
     return (
       <>
         <Query query={gql_query} variables={{ query: query_array }}>
@@ -62,7 +62,7 @@ export default class MosaicContainer extends React.Component {
                 photoSet={photoSet.map(({ id, objectId, height, width }) => {
                   return {
                     key: id,
-                    src: "http://localhost:3000/image/" + objectId,
+                    src: document.location.origin + "/image/" + objectId,
                     width,
                     height
                   };

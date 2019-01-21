@@ -58,7 +58,10 @@ export default class HeapView extends React.Component {
                             ({ id, objectId, height, width }) => {
                               return {
                                 key: id,
-                                src: "http://localhost:3000/image/" + objectId,
+                                src:
+                                  document.location.origin +
+                                  "/image/" +
+                                  objectId,
                                 width,
                                 height
                               };
