@@ -2,7 +2,7 @@ FROM node:current-alpine
 
 # Create app directory
 WORKDIR /usr/src/photo-stack-back
-
+ENV PATH /usr/src/photo-stack-back/node_modules/.bin:$PATH
 RUN apk add graphicsmagick
 COPY package.json ./
 # only src directory is mounted so we need to copy our package.json
