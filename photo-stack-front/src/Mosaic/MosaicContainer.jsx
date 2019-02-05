@@ -60,12 +60,11 @@ export default class MosaicContainer extends React.Component {
               <Mosaic
                 title={title}
                 photoSet={photoSet.map(({ id, objectId, height, width }) => {
-                  const r = gcd(width, height);
                   return {
                     key: id,
                     src: document.location.origin + "/image/" + objectId,
-                    width: width / r,
-                    height: height / r
+                    width,
+                    height
                   };
                 })}
               />

@@ -56,16 +56,14 @@ export default class HeapView extends React.Component {
                           title=""
                           photoSet={searchPhotos.map(
                             ({ id, objectId, height, width }) => {
-                              console.log(width, height);
-                              const r = gcd(width, height);
                               return {
                                 key: id,
                                 src:
                                   document.location.origin +
                                   "/image/" +
                                   objectId,
-                                width: width / r,
-                                height: height / r
+                                width,
+                                height
                               };
                             }
                           )}
