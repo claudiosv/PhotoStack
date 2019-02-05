@@ -3,11 +3,20 @@ FROM node:current-alpine
 # Create app directory
 WORKDIR /usr/src/photo-stack-back
 ENV PATH /usr/src/photo-stack-back/node_modules/.bin:$PATH
+# Install app dependencies
 RUN apk add graphicsmagick
 COPY package.json ./
-# only src directory is mounted so we need to copy our package.json
-# in theory should copy the lock too, but no.
-RUN npm install
-RUN npm install pm2 -g
 
-CMD [ "pm2-runtime", "start", "src/app.js", "--watch"]
+# If you are building your code for production
+RUN npm update
+RUN npm upgrade
+RUN npm upgrade npm
+RUN npm install
+RUN npm update
+RUN npm upgrade
+
+# Bundle app source
+COPY ./dist ./dist
+
+EXPOSE 8080
+CMD [ "npm", "run", "prod" ]

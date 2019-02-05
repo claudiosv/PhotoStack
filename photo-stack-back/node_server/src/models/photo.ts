@@ -37,4 +37,4 @@ const photoSchema = new mongoose.Schema({
   fullsize: String
 });
 
-module.exports = mongoose.model("Photo", photoSchema);
+export default mongoose.model("Photo", photoSchema);

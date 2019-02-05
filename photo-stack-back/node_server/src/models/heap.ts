@@ -7,4 +7,4 @@ const heapSchema = new mongoose.Schema({
   thumbnail: String
 });
 
-module.exports = mongoose.model("Heap", heapSchema);
+export default mongoose.model("Heap", heapSchema);

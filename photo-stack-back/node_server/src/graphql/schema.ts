@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require("apollo-server");
+import { ApolloServer, gql } from "apollo-server";
 const schema = gql`
   type User {
     id: ID!
@@ -81,4 +81,4 @@ const schema = gql`
   }
 `;
 
-module.exports = schema;
+export default schema;

@@ -1,10 +1,10 @@
-const {
+import {
   ApolloServer,
   ApolloError,
   UserInputError,
   gql,
   AuthenticationError
-} = require("apollo-server");
+} from "apollo-server";
 const Minio = require("minio");
 
 const minioClient = new Minio.Client({
@@ -224,4 +224,4 @@ const makeResolvers = models => ({
   }
 });
 
-module.exports = makeResolvers;
+export default makeResolvers;

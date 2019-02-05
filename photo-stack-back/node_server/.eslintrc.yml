@@ -1,0 +1,16 @@
+# .eslintrc.yaml
+---
+extends: airbnb-base
+env:
+  node: true
+  es6: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  sourceType: module
+  ecmaFeatures:
+    modules: true
+rules:
+  no-plusplus: off
+  quotes:
+    - error
+    - "double"
