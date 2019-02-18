@@ -13,6 +13,7 @@ import * as multer from "multer";
 import * as cors from "cors";
 import * as mongoose from "mongoose";
 import * as connectRedis from "connect-redis";
+import * as nanoid from "nanoid";
 const RedisStore: connectRedis.RedisStore = connectRedis(session);
 const resolvers = makeResolvers({ User, Photo, Heap });
 const minioClient = new Minio.Client({
@@ -131,14 +132,13 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
   try {
     const redis = require("redis");
     const pub = redis.createClient(6379, "redis");
-    const uuidv4 = require("uuid/v4");
     const ExifImage = require("exif").ExifImage;
     const moment = require("moment");
     (req.files as Express.Multer.File[]).forEach(
       (file: Express.Multer.File) => {
         const { buffer, originalname, mimetype, encoding } = file;
 
-        let objectId = uuidv4();
+        let objectId = nanoid();
         let metaData: object = {
           "Content-Type": mimetype,
           Filename: originalname
@@ -160,7 +160,7 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
                 .noProfile()
                 .stream();
 
-              let thumbnailId = uuidv4();
+              let thumbnailId = nanoid();
               return minioClient
                 .putObject("photostack", thumbnailId, stream, 0, metaData)
                 .then(() => {
