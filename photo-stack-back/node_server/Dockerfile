@@ -16,7 +16,9 @@ RUN npm update
 RUN npm upgrade
 
 # Bundle app source
-COPY ./dist ./dist
+# COPY ./dist ./dist
 
 EXPOSE 8080
-CMD [ "npm", "run", "prod" ]
+# CMD [ "npm", "run", "prod" ]
+# CMD [ "npm", "run", "debug" ]
+CMD tsnd --inspect --debug --transpileOnly --respawn src/app.ts

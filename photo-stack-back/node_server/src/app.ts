@@ -129,15 +129,16 @@ const upload = multer({
 });
 
 app.post("/upload/", upload.array("photos", 100), async (req, res) => {
+  console.log("Upload route");
   try {
     const redis = require("redis");
     const pub = redis.createClient(6379, "redis");
     const ExifImage = require("exif").ExifImage;
     const moment = require("moment");
+
     (req.files as Express.Multer.File[]).forEach(
       (file: Express.Multer.File) => {
         const { buffer, originalname, mimetype, encoding } = file;
-
         let objectId = nanoid();
         let metaData: object = {
           "Content-Type": mimetype,
@@ -147,7 +148,6 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
           "photostack",
           objectId,
           buffer,
-          0,
           metaData,
           (err, etag) => {
             if (err) console.log("Error", err, etag);
@@ -162,7 +162,7 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
 
               let thumbnailId = nanoid();
               return minioClient
-                .putObject("photostack", thumbnailId, stream, 0, metaData)
+                .putObject("photostack", thumbnailId, stream, metaData)
                 .then(() => {
                   exifData = { exif: {} };
                   var sizeOf = require("image-size");
@@ -217,7 +217,9 @@ app.post("/upload/", upload.array("photos", 100), async (req, res) => {
 server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  console.log(
+    `🚀 Server now ready at http://localhost:4000${server.graphqlPath}`
+  )
 );
 var sub = redis.createClient(6379, "redis");
 // const { promisify } = require("util");

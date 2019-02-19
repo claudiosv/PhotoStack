@@ -4,6 +4,8 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import Header from "../Header";
 import { Redirect, Match } from "@reach/router";
+import fetchProgress from "fetch-progress";
+import { upload } from "xhr-file";
 
 const GET_USER = gql`
   query getUser {
@@ -14,48 +16,76 @@ const GET_USER = gql`
 `;
 
 export default class AppContainer extends React.Component {
-  uploadAction = (fileList, test) => {
-    console.log("up action", fileList, test);
+  constructor(props) {
+    super(props);
+    this.state = {
+      progress: 0,
+      uploading: false
+    };
+  }
+
+  uploadAction = fileList => {
     var data = new FormData();
     for (let i = 0; i < fileList.length; i++)
       data.append("photos", fileList[i]);
-
-    fetch(document.location.origin + "/upload", {
-      mode: "no-cors",
-      method: "POST",
-      // headers: {
-      //   "Content-Type": "multipart/form-data",
-      //   Accept: "application/json",
-      //   type: "formData"
-      // },
-      body: data
-    }).then(
-      function(res) {
-        if (res.ok) {
-          alert(
-            "Upload successful. Please allow time for the image to be processed before it can be searched. Dismiss alert to refresh page."
-          );
-          window.location.reload();
-        } else if (res.status == 401) {
-          alert("Oops! There was an error with the upload. Please try again.");
-        }
-      },
-      function(e) {
-        alert("Error submitting form!");
+    this.setState({ uploading: true });
+    const self = this;
+    const hostUrl = document.location.origin + "/upload";
+    const onProgress = ev => {
+      if (ev.lengthComputable) {
+        const progress = Math.floor((100 * ev.loaded) / ev.total);
+        self.setState({ progress: progress });
       }
-    );
+    };
+    upload(hostUrl, { data, onProgress })
+      .then(res => {
+        console.log("res", res);
+      })
+      .catch(err => console.log("Upload failed: ", err));
   };
 
   render() {
+    const { progress, uploading } = this.state;
     return (
       <FileDrop onDrop={this.uploadAction}>
+        <div class={uploading ? "modal is-active" : "modal"}>
+          <div class="modal-background" />
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Upload</p>
+              <button
+                class="delete"
+                onClick={() => this.setState({ uploading: false })}
+                aria-label="close"
+              />
+            </header>
+            <section class="modal-card-body">
+              <progress class="progress" value={progress} max="100">
+                {progress}%
+              </progress>
+              {progress < 100 && `Uploaded ${progress}%`}
+              {progress == 100 &&
+                "Upload successful. Please allow time for the images to be processed before it can be searched. Dismiss alert to refresh page."}
+            </section>
+            <footer
+              class="modal-card-foot"
+              style={{ justifyContent: "flex-end" }}
+            >
+              <button
+                onClick={() => this.setState({ uploading: false })}
+                class="button"
+              >
+                Done
+              </button>
+            </footer>
+          </div>
+        </div>
         <Query query={GET_USER}>
           {({ loading, error, data }) => {
             if (loading) {
               return "Loading...";
             }
             if (data) {
-              console.log(data);
               return (
                 <Header
                   type="search"
