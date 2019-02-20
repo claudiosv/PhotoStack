@@ -13,7 +13,8 @@ import * as multer from "multer";
 import * as cors from "cors";
 import * as mongoose from "mongoose";
 import * as connectRedis from "connect-redis";
-import * as nanoid from "nanoid";
+import nanoid from "nanoid";
+import jwt from "express-jwt";
 const RedisStore: connectRedis.RedisStore = connectRedis(session);
 const resolvers = makeResolvers({ User, Photo, Heap });
 const minioClient = new Minio.Client({
@@ -72,6 +73,11 @@ const server = new ApolloServer({
 
 const app = express();
 app.set("trust proxy", 1);
+const auth = jwt({
+  secret: "jwt secret", //process.env.JWT_SECRET,
+  credentialsRequired: false
+});
+app.use(auth);
 app.use(
   session({
     store: new RedisStore({

@@ -41,7 +41,7 @@ const schema = gql`
   type Query {
     getPhotos: [Photo]
     getUser: User
-    loginUser(email: String!, password: String!): User
+    loginUser(email: String!, password: String!): String
     searchPhotos(query: [String!]!, conjunctive: Boolean): [Photo]
     getAutocomplete(query: String!): [String]
     getHighlights: [Photo]
@@ -64,7 +64,7 @@ const schema = gql`
       password: String!
       firstName: String!
       lastName: String!
-    ): User
+    ): String
     updateUser(
       email: String
       password: String

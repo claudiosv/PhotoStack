@@ -1,12 +1,6 @@
-import {
-  ApolloServer,
-  ApolloError,
-  UserInputError,
-  gql,
-  AuthenticationError
-} from "apollo-server";
-const Minio = require("minio");
-
+import { UserInputError, AuthenticationError } from "apollo-server";
+import jsonwebtoken from "jsonwebtoken";
+import * as Minio from "minio";
 const minioClient = new Minio.Client({
   endPoint: "minio",
   port: 9000,
@@ -17,6 +11,16 @@ const minioClient = new Minio.Client({
 
 const makeResolvers = models => ({
   Query: {
+    async me(_, args, { user }) {
+      // make sure user is logged in
+      if (!user) {
+        throw new Error("You are not authenticated!");
+      }
+
+      // user is authenticated
+      return models.User.findById(user.id);
+    },
+
     getUser(root, {}, request, schema) {
       if (request.session.userId) {
         return models.User.findById(request.session.userId);
@@ -45,7 +49,13 @@ const makeResolvers = models => ({
         if (docs && bcrypt.compareSync(password, docs.password)) {
           request.session.loggedIn = true;
           request.session.userId = docs.id;
-          return docs;
+          return jsonwebtoken.sign(
+            { id: docs.id, email: docs.email },
+            "jwt secret",
+            // process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+          );
+          // return docs;
         } else {
           throw new UserInputError("Wrong username/password");
         }
