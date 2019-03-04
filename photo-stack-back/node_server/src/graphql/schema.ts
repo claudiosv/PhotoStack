@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from "apollo-server";
+import { gql } from "apollo-server";
 const schema = gql`
   type User {
     id: ID!

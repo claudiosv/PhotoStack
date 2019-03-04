@@ -12,25 +12,35 @@ import * as signale from "signale";
 import * as multer from "multer";
 import * as cors from "cors";
 import * as mongoose from "mongoose";
-import * as connectRedis from "connect-redis";
+// import * as connectRedis from "connect-redis";
 import nanoid from "nanoid";
-import jwt from "express-jwt";
-const RedisStore: connectRedis.RedisStore = connectRedis(session);
+import * as jwt from "express-jwt";
+const redis = require("redis");
+const pub = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
+const ExifImage = require("exif").ExifImage;
+const moment = require("moment");
+require("dotenv").config();
+// const RedisStore: connectRedis.RedisStore = connectRedis(session);
 const resolvers = makeResolvers({ User, Photo, Heap });
 const minioClient = new Minio.Client({
-  endPoint: "minio",
-  port: 9000,
+  endPoint: process.env.MINIO_HOST as string,
+  port: parseInt(process.env.MINIO_PORT as string),
   useSSL: false,
-  accessKey: "minio",
-  secretKey: "minio123"
+  accessKey: process.env.MINIO_ACCESS as string,
+  secretKey: process.env.MINIO_SECRET as string
 });
 
 mongoose.set("useFindAndModify", false);
 function connect() {
   mongoose
-    .connect("mongodb://photostack_user:12345678@mongo-db:27017/photostack", {
-      useNewUrlParser: true
-    })
+    .connect(
+      `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${
+        process.env.DB_HOST
+      }:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+      {
+        useNewUrlParser: true
+      }
+    )
     .catch(error => {
       console.log(error, "Promise error");
       connect();
@@ -74,26 +84,26 @@ const server = new ApolloServer({
 const app = express();
 app.set("trust proxy", 1);
 const auth = jwt({
-  secret: "jwt secret", //process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET as string, //process.env.JWT_SECRET,
   credentialsRequired: false
 });
 app.use(auth);
-app.use(
-  session({
-    store: new RedisStore({
-      host: "redis",
-      port: 6379
-    }),
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-  })
-);
+// app.use(
+//   session({
+//     store: new RedisStore({
+//       host: "redis",
+//       port: 6379
+//     }),
+//     secret: "keyboard cat",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: false }
+//   })
+// );
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
   })
@@ -137,11 +147,6 @@ const upload = multer({
 app.post("/upload/", upload.array("photos", 100), async (req, res) => {
   console.log("Upload route");
   try {
-    const redis = require("redis");
-    const pub = redis.createClient(6379, "redis");
-    const ExifImage = require("exif").ExifImage;
-    const moment = require("moment");
-
     (req.files as Express.Multer.File[]).forEach(
       (file: Express.Multer.File) => {
         const { buffer, originalname, mimetype, encoding } = file;

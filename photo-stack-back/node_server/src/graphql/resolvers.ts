@@ -1,234 +1,208 @@
 import { UserInputError, AuthenticationError } from "apollo-server";
-import jsonwebtoken from "jsonwebtoken";
+import * as jsonwebtoken from "jsonwebtoken";
 import * as Minio from "minio";
+require("dotenv").config();
 const minioClient = new Minio.Client({
-  endPoint: "minio",
-  port: 9000,
+  endPoint: process.env.MINIO_HOST as string,
+  port: parseInt(process.env.MINIO_PORT as string),
   useSSL: false,
-  accessKey: "minio",
-  secretKey: "minio123"
+  accessKey: process.env.MINIO_ACCESS as string,
+  secretKey: process.env.MINIO_SECRET as string
 });
 
-const makeResolvers = models => ({
+const makeResolvers = (models: any) => ({
   Query: {
-    async me(_, args, { user }) {
-      // make sure user is logged in
+    async getUser(_, _, { user }) {
       if (!user) {
-        throw new Error("You are not authenticated!");
+        throw new AuthenticationError("You are not authenticated!");
       }
 
       // user is authenticated
       return models.User.findById(user.id);
     },
-
-    getUser(root, {}, request, schema) {
-      if (request.session.userId) {
-        return models.User.findById(request.session.userId);
-      } else {
-        throw new AuthenticationError("You must be logged in");
+    async getPhotos(_, _, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
-    },
 
-    getPhotos(root, {}, request, schema) {
-      if (request.session.userId) {
-        return models.Photo.find(
-          { owner: request.session.userId },
-          (err, docs) => {
-            if (err) console.log(err);
-            return docs;
-          }
-        );
-      } else {
-        throw new AuthenticationError("You must be logged in");
+      return models.Photo.find({ owner: user.id }, (err, docs) => {
+        if (err) console.log(err);
+        return docs;
+      });
+    },
+    async loginUser(_, { email, password }, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
-    },
-
-    loginUser(root, { email, password }, request) {
       const bcrypt = require("bcryptjs");
       return models.User.findOne({ email: email }).then(docs => {
         if (docs && bcrypt.compareSync(password, docs.password)) {
-          request.session.loggedIn = true;
-          request.session.userId = docs.id;
+          user.loggedIn = true;
+          user.userId = docs.id;
           return jsonwebtoken.sign(
             { id: docs.id, email: docs.email },
-            "jwt secret",
-            // process.env.JWT_SECRET,
+            process.env.JWT_SECRET as string,
             { expiresIn: "1d" }
           );
-          // return docs;
         } else {
-          throw new UserInputError("Wrong username/password");
+          return new UserInputError("Wrong username/password");
         }
       });
-
-      /*
-      , (err, docs) => {
-        if (err || !docs) {
-          console.log(err);
-          return "fail";
-        }
-      }*/
     },
-
-    isLoggedIn(root, {}, req) {
+    async isLoggedIn(_, {}, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
+      }
       return JSON.stringify({
-        loggedIn: req.session.loggedIn,
-        userId: req.session.userId
+        loggedIn: user.loggedIn,
+        userId: user.userId
       });
     },
 
-    searchPhotos(root, { query, conjunctive }, request) {
-      if (request.session.userId) {
-        var queryTags;
-        if (conjunctive) {
-          queryTags = { $all: query };
-        } else {
-          queryTags = { $in: query };
-        }
+    async searchPhotos(_, { query, conjunctive }, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
+      }
+      var queryTags;
+      if (conjunctive) {
+        queryTags = { $all: query };
         return models.Photo.find(
-          { owner: request.session.userId, tags: queryTags },
+          { owner: user.userId, tags: queryTags },
           (err, docs) => {
             if (err) console.log(err);
             return docs;
           }
         );
-      } else {
-        throw new AuthenticationError("You must be logged in");
       }
     },
 
-    getAutocomplete(root, { query }, request) {
-      if (request.session.userId) {
-        return models.Photo.find({
-          owner: request.session.userId,
-          tags: new RegExp(`${query}(.*)`, "i")
-        }).then(photo => {
-          var completions = new Set();
-          photo.forEach(doc => doc.tags.forEach(x => completions.add(x)));
-          return Array.from(completions);
-        });
-      } else {
-        throw new AuthenticationError("You must be logged in");
+    async getAutocomplete(_, { query }, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
+      return models.Photo.find({
+        owner: user.userId,
+        tags: new RegExp(`${query}(.*)`, "i")
+      }).then(photo => {
+        var completions = new Set();
+        photo.forEach(doc => doc.tags.forEach(x => completions.add(x)));
+        return Array.from(completions);
+      });
     },
 
-    getHighlights(root, {}, request) {
+    async getHighlights(_, _, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
+      }
       //last 5 uploaded photos
-      if (request.session.userId) {
-        return models.Photo.find({ owner: request.session.userId }, null, {
-          skip: 0, // Starting Row
-          limit: 5, // Ending Row
-          sort: {
-            uploadTime: -1 //Sort by Date Added DESC
-          }
-        }).then(response => response);
-      } else {
-        throw new AuthenticationError("You must be logged in");
-      }
+      return models.Photo.find({ owner: user.userId }, null, {
+        skip: 0, // Starting Row
+        limit: 5, // Ending Row
+        sort: {
+          uploadTime: -1 //Sort by Date Added DESC
+        }
+      }).then(response => response);
     },
 
-    getHeaps(root, {}, request) {
-      if (request.session.userId) {
-        return models.Heap.find({ owner: request.session.userId }).then(
-          response => {
-            return response;
-          }
-        );
-      } else {
-        throw new AuthenticationError("You must be logged in");
+    async getHeaps(_, {}, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
+      return models.Heap.find({ owner: user.userId }).then(response => {
+        return response;
+      });
     },
 
-    getHeap(root, { id }, request) {
-      if (request.session.userId) {
-        return models.Heap.findOne({
-          _id: id,
-          owner: request.session.userId
-        }).then(response => {
-          return response;
-        });
-      } else {
-        throw new AuthenticationError("You must be logged in");
+    getHeap(_, { id }, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
+      return models.Heap.findOne({
+        _id: id,
+        owner: user.userId
+      }).then(response => {
+        return response;
+      });
     },
 
-    getPhoto(root, { id }, request) {
-      if (request.session.userId) {
-        return models.Photo.findOne({
-          _id: id,
-          owner: request.session.userId
-        }).then(response => {
-          return response;
-        });
-      } else {
-        throw new AuthenticationError("You must be logged in");
+    getPhoto(_, { id }, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
+      return models.Photo.findOne({
+        _id: id,
+        owner: user.userId
+      }).then(response => {
+        return response;
+      });
     }
   },
+
   Mutation: {
-    createUser(root, args, req) {
+    async createUser(_, args) {
       const bcrypt = require("bcryptjs");
       var hash = bcrypt.hashSync(args.password, 10);
       args.password = hash;
       const user = new models.User(args);
       return user.save().then(response => response);
     },
-    updateUser(root, args, req) {
-      if (req.session.userId) {
-        const bcrypt = require("bcryptjs");
-        var hash = bcrypt.hashSync(args.password, 10);
-        args.password = hash;
-        return models.User.findByIdAndUpdate(req.session.userId, {
-          ...args
-        }).then(response => response);
-      } else {
-        throw new AuthenticationError("You must be logged in");
+    async updateUser(_, args, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
       }
+      const bcrypt = require("bcryptjs");
+      var hash = bcrypt.hashSync(args.password, 10);
+      args.password = hash;
+      return models.User.findByIdAndUpdate(user.userId, {
+        ...args
+      }).then(response => response);
     },
-    async createHeap(root, { name, tags }, req) {
-      if (req.session.userId) {
-        return models.Photo.findOne({
-          owner: req.session.userId,
-          tags: { $in: tags }
-        }).then(photo => {
-          return minioClient
-            .getObject("photostack", photo.objectId)
-            .then(dataStream => {
-              var gm = require("gm");
-              var stream = gm(dataStream)
-                .resize("500", "500", "^")
-                .gravity("Center")
-                .crop(500, 500)
-                .noProfile()
-                .stream();
+    async createHeap(_, { name, tags }, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
+      }
+      return models.Photo.findOne({
+        owner: user.userId,
+        tags: { $in: tags }
+      }).then(photo => {
+        return minioClient
+          .getObject("photostack", photo.objectId)
+          .then(dataStream => {
+            var gm = require("gm");
+            var stream = gm(dataStream)
+              .resize("500", "500", "^")
+              .gravity("Center")
+              .crop(500, 500)
+              .noProfile()
+              .stream();
 
-              const uuidv4 = require("uuid/v4");
-              let thumbnailName = uuidv4();
-              let metaData = {
-                "Content-Type": photo.mimeType,
-                Filename: photo.fileName
-              };
-              return minioClient
-                .putObject("photostack", thumbnailName, stream, metaData)
-                .then(etag => {
-                  const heap = new models.Heap({
-                    name: name,
-                    tags: tags,
-                    owner: req.session.userId,
-                    thumbnail: thumbnailName
-                  });
-                  console.log("Saving heap to DB");
-                  return heap.save();
+            const uuidv4 = require("uuid/v4");
+            let thumbnailName = uuidv4();
+            let metaData: Minio.ItemBucketMetadata = {
+              "Content-Type": photo.mimeType,
+              Filename: photo.fileName
+            };
+            return minioClient
+              .putObject("photostack", thumbnailName, stream, metaData)
+              .then(_ => {
+                const heap = new models.Heap({
+                  name: name,
+                  tags: tags,
+                  owner: user.userId,
+                  thumbnail: thumbnailName
                 });
-            });
-        });
-      } else {
-        throw new AuthenticationError("You must be logged in");
-      }
+                console.log("Saving heap to DB");
+                return heap.save();
+              });
+          });
+      });
     },
-    logout(root, args, req) {
-      req.session.userId = false;
-      req.session.loggedIn = false;
+    logout(_, _, { user }) {
+      if (!user) {
+        throw new AuthenticationError("You are not authenticated!");
+      }
+      user.userId = false;
+      user.loggedIn = false;
       return "logged_out";
     }
   }
