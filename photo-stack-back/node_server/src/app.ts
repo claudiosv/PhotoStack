@@ -111,7 +111,7 @@ app.use(
 
 app.get("/image/:imageId", function(req, res) {
   res.set("Content-Type", "image/jpeg");
-
+  res.set("Cache-Control", "public, max-age=31557600");
   minioClient.getObject("photostack", req.params.imageId, function(
     err,
     dataStream
