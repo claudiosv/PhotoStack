@@ -1,12 +1,12 @@
 # PhotoStack - [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo)
 
-Semester group project for the Internet and Mobile Services course at the Free University of Bolzano.
+Semester group project for the Internet and Mobile Services course at the Free University of Bolzano. PhotoStack is an innovative and easy to use personal photo collection service. It uses AI techniques to order and categorise photos without any help from the user.
 
 ## Motivation
 
 
 ## Build status
-The project is currently under active development, first release is foreseen in late January 2018
+The project is currently under active development, first release is foreseen in late March 2018
 
 ## Code style
 
