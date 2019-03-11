@@ -5,7 +5,6 @@ import Heap from "./models/heap";
 import * as express from "express";
 import typeDefs from "./graphql/schema";
 import makeResolvers from "./graphql/resolvers";
-import * as session from "express-session";
 import * as redis from "redis";
 import * as Minio from "minio";
 import * as signale from "signale";
@@ -15,8 +14,10 @@ import * as mongoose from "mongoose";
 // import * as connectRedis from "connect-redis";
 import nanoid from "nanoid";
 import * as jwt from "express-jwt";
-const redis = require("redis");
-const pub = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
+const pub = redis.createClient(
+  parseInt(process.env.REDIS_HOST as string),
+  process.env.REDIS_PORT as string
+);
 const ExifImage = require("exif").ExifImage;
 const moment = require("moment");
 require("dotenv").config();
@@ -111,7 +112,7 @@ app.use(
 
 app.get("/image/:imageId", function(req, res) {
   res.set("Content-Type", "image/jpeg");
-
+  res.set("Cache-Control", "public, max-age=31557600");
   minioClient.getObject("photostack", req.params.imageId, function(
     err,
     dataStream
