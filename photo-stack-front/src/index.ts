@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { Router } from "@reach/router";
 
@@ -31,7 +31,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-const mainComponent = () => (
+ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
       <AppContainer path="/">
@@ -45,9 +45,9 @@ const mainComponent = () => (
       <SignInContainer path="/signin" />
       <SignOutContainer path="/signout" />
     </Router>
-  </ApolloProvider>
+  </ApolloProvider>,
+  document.getElementById("root")
 );
-ReactDOM.render(mainComponent, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
